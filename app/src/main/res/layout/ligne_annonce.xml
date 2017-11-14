@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" xmlns:tools="http://schemas.android.com/tools">
+    <ImageView
+            android:id="@+id/direction"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            tools:background="#AAA" />
+    <ImageView
+            android:id="@+id/category"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/direction"
+            android:layout_alignTop="@+id/direction"
+            tools:background="#AAA" />
+    <TextView
+            android:id="@+id/announceId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/category"
+            android:layout_alignTop="@+id/category"
+            android:textStyle="bold"
+            tools:text="Pseudo" />
+
+    <TextView android:id="@+id/description"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="@android:color/black"
+              android:layout_alignLeft="@+id/announceId"
+              android:layout_below="@+id/announceId"
+              tools:text="Texte de mon tweet" />
+</RelativeLayout>
