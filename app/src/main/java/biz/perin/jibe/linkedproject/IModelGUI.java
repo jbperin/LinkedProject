@@ -24,6 +24,6 @@ import java.util.ArrayList;
  */
 public interface IModelGUI {
     public ArrayList<String> getAnnounces();
-//    public ArrayList<String> getAnnuaire();
-//    public ArrayList<String> getForums();
+    public ArrayList<String> getAnnuaire();
+    public ArrayList<String> getForums();
 }

@@ -140,7 +140,7 @@ public class SelBuilder implements ISelReceiver {
                     ((Transaction)object).setPseudoDemander(pseudoOffer);
                     ((Transaction)object).setAmount(nullify(valeur));
                     ((Transaction)object).setDemandDescription(nature);
-                    ((Transaction)object).setOfferDescritpion(nature);
+                    ((Transaction)object).setOfferDescription(nature);
 
                     model.add((Transaction)object);
 

@@ -18,68 +18,120 @@
 package biz.perin.jibe.linkedproject;
 
 import biz.perin.jibe.linkedproject.file.FileHelper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import biz.perin.jibe.linkedproject.model.*;
+import com.google.gson.*;
 
 import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
+
 
 /**
  * Created by Jean-Baptiste PERIN on 12/11/2017.
  */
-public class ModelInterface implements IModelGUI, Observer {
+public class ModelInterface implements IModelGUI, LetsObserver {
 
     ArrayList<String> lAnn = new ArrayList<>();
+    ArrayList<String> lPers = new ArrayList<>();
+    ArrayList<String> lForum = new ArrayList<>();
+    ArrayList<String> lTrans = new ArrayList<>();
+    String personnalInfo = null;
+    String account  = null;
+
+    public void loadFromFile(String filename) {
+        String SelJson = FileHelper.getInstance().readStringFromFile(filename);
+
+        JsonObject jsobj = new JsonParser().parse(SelJson).getAsJsonObject();
+
+        if (jsobj.has("listOfAnnounce")) {
+            JsonArray jsList = jsobj.get("listOfAnnounce").getAsJsonArray();
+            for (JsonElement jsElem : jsList) {
+                lAnn.add(jsElem.toString());
+
+            }
+        }
+
+        if (jsobj.has("listOfPerson")) {
+            JsonArray jsList = jsobj.get("listOfPerson").getAsJsonArray();
+            for (JsonElement jsElem : jsList) {
+                lPers.add(jsElem.toString());
+
+            }
+        }
+
+        if (jsobj.has("listOfTransaction")) {
+            JsonArray jsList = jsobj.get("listOfTransaction").getAsJsonArray();
+            for (JsonElement jsElem : jsList) {
+                lTrans.add(jsElem.toString());
+
+            }
+        }
+
+        if (jsobj.has("listOfForum")) {
+            JsonArray jsList = jsobj.get("listOfForum").getAsJsonArray();
+            for (JsonElement jsElem : jsList) {
+                lForum.add(jsElem.toString());
+
+            }
+        }
+
+        if (jsobj.has("personnalInfo")) {
+            JsonElement jsElem = jsobj.get("personnalInfo");
+            personnalInfo = jsElem.toString();
+        }
+
+        if (jsobj.has("account")) {
+            JsonElement jsElem = jsobj.get("account");
+            account = jsElem.toString();
+            // TODO deals with transactions of the account
+        }
+
+    }
 
     @Override
     public ArrayList<String> getAnnounces() {
 
-
-        String SelJson = FileHelper.getInstance().readStringFromFile("sel.js");
-        //System.out.println(SelJson);
-//        JSONParser parser = new JSONParser();
-
-//        try {
-//            JsonObject obj = new JSONObject(SelJson);
-        JsonObject jsobj = new JsonParser().parse(SelJson).getAsJsonObject();
-        if(jsobj.has("listOfAnnounce")) {
-            JsonArray jsListOfAnnounce = jsobj.get("listOfAnnounce").getAsJsonArray();
-            for (JsonElement jsAnnounce : jsListOfAnnounce) {
-                lAnn.add(jsAnnounce.toString());
-
-//            JsonObject jsTrans = jsAnnounce.getAsJsonObject();
-//            System.out.println("jsAnnounce : " +jsTrans.toString());
-//            String pseudoOfferer= (jsTrans.has("pseudoOfferer"))?jsTrans.get("pseudoOfferer").getAsString():null;
-//            String pseudoDemander= jsTrans.get("pseudoDemander").getAsString();
-//            String offerDescritpion= jsTrans.get("offerDescritpion").getAsString();
-//            String demandDescription= jsTrans.get("demandDescription").getAsString();
-//            //String turlututu= jsTrans.get("turlututu").getAsString();
-//            int amount = nullifyJsInteger(jsTrans,"amount");
+//        String SelJson = FileHelper.getInstance().readStringFromFile("sel.js");
 //
-//            System.out.println("Announce : "
-//                    +     pseudoOfferer + " "
-//                    +     pseudoDemander + " "
-//                    +     offerDescritpion + " "
-//                    +     demandDescription + " "
-//                    +     amount + " "
-//            );
-
-            }
-            System.out.println();
-
-//        } catch (ParseException e) {
-//            e.printStackTrace();
+//        JsonObject jsobj = new JsonParser().parse(SelJson).getAsJsonObject();
+//        if(jsobj.has("listOfAnnounce")) {
+//            JsonArray jsListOfAnnounce = jsobj.get("listOfAnnounce").getAsJsonArray();
+//            for (JsonElement jsAnnounce : jsListOfAnnounce) {
+//                lAnn.add(jsAnnounce.toString());
+//
+//            }
+//
 //        }
-        }
         return (lAnn);
 
     }
 
     @Override
-    public void update(Observable observable, Object o) {
+    public ArrayList<String> getAnnuaire() {
+        return lAnn;
+    }
 
+    @Override
+    public ArrayList<String> getForums() {
+        return lForum;
+    }
+
+    @Override
+    public void onNewAnnounce(Announce ann) {
+        lAnn.add(new Gson().toJson(ann).toString());
+    }
+
+    @Override
+    public void onNewPerson(Person pers) {
+        lPers.add(new Gson().toJson(pers).toString());
+    }
+
+    @Override
+    public void onNewPost(ForumMessage mess) {
+        // TODO
+        //lMess.add(new Gson().toJson(mess).toString());
+    }
+
+    @Override
+    public void onNewTransaction(Transaction trans) {
+        lTrans.add(new Gson().toJson(trans).toString());
     }
 }

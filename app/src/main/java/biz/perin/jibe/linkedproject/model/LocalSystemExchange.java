@@ -18,11 +18,12 @@
 package biz.perin.jibe.linkedproject.model;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by Jean-Baptiste PERIN on 03/11/2017.
  */
-public class LocalSystemExchange implements ILocalSystemExchange {
+public class LocalSystemExchange extends LetsObservable implements ILocalSystemExchange{
 
     private final List<Person> listOfPerson = new ArrayList<>();
     private final List<Announce> listOfAnnounce = new ArrayList<>();
@@ -30,7 +31,6 @@ public class LocalSystemExchange implements ILocalSystemExchange {
     private final List<Transaction> listOfTransaction = new ArrayList<>();
     private Forum tabOfForum[] = new Forum[Forum.forum_category.values().length];
     private PersonnalInfo personnalInfo = null;
-
     private Account account = null;
 
     public LocalSystemExchange() {
@@ -79,6 +79,7 @@ public class LocalSystemExchange implements ILocalSystemExchange {
             }
         }
         if (listOfPerson.add(pers)) {
+            notifyNew(pers);
             return pers;
         } else return null;
     }
@@ -97,6 +98,7 @@ public class LocalSystemExchange implements ILocalSystemExchange {
             }
         }
         if (listOfAnnounce.add(ann)) {
+            notifyNew(ann);
             return ann;
         }
         return null;
@@ -106,6 +108,7 @@ public class LocalSystemExchange implements ILocalSystemExchange {
     public Transaction add(Transaction trans) {
         // TODO Checck if transaction does not already exist
         if (listOfTransaction.add(trans)) {
+            notifyNew(trans);
             return trans;
         }
         return null;
@@ -141,6 +144,8 @@ public class LocalSystemExchange implements ILocalSystemExchange {
         }
         if (disc != null) {
             disc.getListOfMessages().add(mess);
+            notifyNew(mess);
+            return mess;
         } else {
             // TODO trigger exception
             //throw IOException();

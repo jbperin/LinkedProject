@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import biz.perin.jibe.linkedproject.database.DatabaseHelper;
 import biz.perin.jibe.linkedproject.file.FileHelper;
 import biz.perin.jibe.linkedproject.model.ISelReceiver;
 import biz.perin.jibe.linkedproject.model.LocalSystemExchange;
@@ -37,8 +38,10 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = "MainActivity";
-    ModelInterface mModel;
-    ArrayList<String> listAnnounce;
+    private ModelInterface mModel;
+    private ArrayList<String> listAnnounce;
+    private DatabaseHelper dbHelper = null;
+    private WebHelper webHelper = null;
 
     LocalSystemExchange theSel;
 
@@ -77,18 +80,23 @@ public class MainActivity extends AppCompatActivity
 
         checkNetworkConnection();
 
+        dbHelper = DatabaseHelper.getInstance(this);
+        webHelper = WebHelper.getInstance();
 
         theSel = new LocalSystemExchange();
 
 
         ISelReceiver aSelBuilder = new SelBuilder(theSel);
         WebClient aWebClient = new WebClient();
-        WebHelper.getInstance().setSelReceiver(aSelBuilder);
-        WebHelper.getInstance().setWebClient(aWebClient);
+
+        webHelper.setSelReceiver(aSelBuilder);
+        webHelper.setWebClient(aWebClient);
 
 
         mModel = new ModelInterface();
 
+        theSel.attach(mModel);
+        theSel.attach(dbHelper);
 
         Log.d(TAG, "Starts service");
         startService(new Intent(getBaseContext(), DownloadService.class));
@@ -176,10 +184,10 @@ public class MainActivity extends AppCompatActivity
 
     private void refreshView() {
 
-        Gson theGson = new Gson();
-        String systemcomplet = theGson.toJson(theSel);
-        //System.out.println(systemcomplet);
-        FileHelper.getInstance().writeStringToFile(systemcomplet, "sel.js");
+//        Gson theGson = new Gson();
+//        String systemcomplet = theGson.toJson(theSel);
+//        //System.out.println(systemcomplet);
+//        FileHelper.getInstance().writeStringToFile(systemcomplet, "sel.js");
 
         listAnnounce = mModel.getAnnounces();
 

@@ -23,7 +23,7 @@ package biz.perin.jibe.linkedproject.model;
 public class Transaction {
     String pseudoOfferer = null;
     String pseudoDemander = null;
-    String offerDescritpion = null;
+    String offerDescription = null;
     String demandDescription = null;
     Integer amount = null;
 
@@ -47,12 +47,12 @@ public class Transaction {
         this.pseudoDemander = pseudoDemander;
     }
 
-    public String getOfferDescritpion() {
-        return offerDescritpion;
+    public String getOfferDescription() {
+        return offerDescription;
     }
 
-    public void setOfferDescritpion(String offerDescritpion) {
-        this.offerDescritpion = offerDescritpion;
+    public void setOfferDescription(String offerDescription) {
+        this.offerDescription = offerDescription;
     }
 
     public String getDemandDescription() {
@@ -76,7 +76,7 @@ public class Transaction {
         return "Transaction{" +
                 "pseudoOfferer='" + pseudoOfferer + '\'' +
                 ", pseudoDemander='" + pseudoDemander + '\'' +
-                ", offerDescritpion='" + offerDescritpion + '\'' +
+                ", offerDescription='" + offerDescription + '\'' +
                 ", demandDescription='" + demandDescription + '\'' +
                 ", amount=" + amount +
                 '}';
