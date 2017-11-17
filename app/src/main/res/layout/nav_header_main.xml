@@ -24,13 +24,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text="Android Studio"
+            android:text="SEL Romans"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="android.studio@android.com"
+            android:text="Maison de quartier des Ors\n26 rue Magnards\n26100 Romans\n06 59 60 16 99"
             android:id="@+id/textView"/>
 
 </LinearLayout>

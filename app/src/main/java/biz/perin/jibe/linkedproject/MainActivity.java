@@ -8,8 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -20,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,8 +28,8 @@ import biz.perin.jibe.linkedproject.model.ISelReceiver;
 import biz.perin.jibe.linkedproject.model.LocalSystemExchange;
 import biz.perin.jibe.linkedproject.model.SelBuilder;
 import biz.perin.jibe.linkedproject.view.AnnounceAdapter;
+import biz.perin.jibe.linkedproject.view.ViewGroupUtils;
 import biz.perin.jibe.linkedproject.web.WebClient;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -43,6 +42,10 @@ public class MainActivity extends AppCompatActivity
     private DatabaseHelper dbHelper = null;
     private WebHelper webHelper = null;
 
+    WebView wvPageViewer;
+    NavigationView navigationView;
+    ListView lvListAnnounce;
+
     LocalSystemExchange theSel;
 
 
@@ -50,17 +53,24 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        // Allow to retrieve biz.perin.jibe.linkedproject.web content from main thread
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -68,13 +78,16 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        lvListAnnounce = (ListView) findViewById(R.id.list_of_annon_announce);
+        //ViewGroup parent = (ViewGroup) C.getParent();
+        //int index = parent.indexOfChild(C);
+       // parent.removeView(C);
+        //C=getLayoutInflater().inflate(R.layout.activity_main, parent, false);
 
-        // Allow to retrieve biz.perin.jibe.linkedproject.web content from main thread
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+
 
         FileHelper.getInstance().setContext(this.getApplicationContext());
 
@@ -101,7 +114,16 @@ public class MainActivity extends AppCompatActivity
         Log.d(TAG, "Starts service");
         startService(new Intent(getBaseContext(), DownloadService.class));
 
-        refreshView();
+
+        wvPageViewer = (WebView) new WebView(this);
+        wvPageViewer.loadUrl("file:///android_asset/home.html");
+
+        ViewGroupUtils.replaceView(lvListAnnounce, wvPageViewer);
+
+        //parent.addView(wvPageViewer, index);
+
+
+//        refreshView();
 
 //        SharedPreferences UserPreferences = getSharedPreferences  ("UserPreferences", MODE_PRIVATE );
 //        if (UserPreferences.contains("login") && UserPreferences.contains("password") ){
@@ -175,6 +197,10 @@ public class MainActivity extends AppCompatActivity
             return true;
 
         } else if (id == R.id.action_refresh) {
+
+
+
+
             refreshView();
             return true;
         }
@@ -188,6 +214,7 @@ public class MainActivity extends AppCompatActivity
 //        String systemcomplet = theGson.toJson(theSel);
 //        //System.out.println(systemcomplet);
 //        FileHelper.getInstance().writeStringToFile(systemcomplet, "sel.js");
+        ViewGroupUtils.replaceView(wvPageViewer, lvListAnnounce);
 
         listAnnounce = mModel.getAnnounces();
 
@@ -195,9 +222,10 @@ public class MainActivity extends AppCompatActivity
         TextView tv = (TextView) findViewById(R.id.displayedText);
         tv.setText("Il y a " + listAnnounce.size() + " annonces.");
 
-
-        ListView lv = (ListView) findViewById(R.id.list_of_annon_announce);
-        lv.setAdapter(new AnnounceAdapter(this, listAnnounce));
+        //getLayoutInflater().inflate(R.id.content_main, (ViewGroup)tv.getParent(), false);
+        //tv.getParent()
+        //ListView lv = (ListView) findViewById(R.id.list_of_annon_announce);
+        lvListAnnounce.setAdapter(new AnnounceAdapter(this, listAnnounce));
         final Activity act = this;
         // Create a message handling object as an anonymous class.
         AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
@@ -213,7 +241,7 @@ public class MainActivity extends AppCompatActivity
                 //finish();
             }
         };
-        lv.setOnItemClickListener(mMessageClickedHandler);
+        lvListAnnounce.setOnItemClickListener(mMessageClickedHandler);
     }
 
     @Override
@@ -229,13 +257,15 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_home) {
 
-        } else if (id == R.id.nav_slideshow) {
+            ViewGroupUtils.replaceView(lvListAnnounce, wvPageViewer);
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_announce) {
+
+        } else if (id == R.id.nav_people) {
+
+        } else if (id == R.id.nav_forums) {
 
         } else if (id == R.id.nav_share) {
 

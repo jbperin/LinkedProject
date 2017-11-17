@@ -26,12 +26,6 @@ import android.content.SharedPreferences;
 import android.os.*;
 import android.util.Log;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 /**
  * Created by Jean-Baptiste PERIN on 12/11/2017.
  */
@@ -171,7 +165,7 @@ public class DownloadService extends Service {
         CharSequence text = message;
 
         // Set the icon, scrolling text and timestamp
-        Notification notification = new Notification(R.drawable.ic_menu_manage, "vvs",
+        Notification notification = new Notification(R.drawable.ic_menu_forums, "vvs",
                 System.currentTimeMillis());
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         Intent intent = new Intent(this, MainActivity.class);
