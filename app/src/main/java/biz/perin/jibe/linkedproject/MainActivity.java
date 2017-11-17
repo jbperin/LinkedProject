@@ -201,9 +201,6 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.action_refresh) {
 
-
-
-
             refreshView();
             return true;
         }
@@ -217,6 +214,7 @@ public class MainActivity extends AppCompatActivity
 //        String systemcomplet = theGson.toJson(theSel);
 //        //System.out.println(systemcomplet);
 //        FileHelper.getInstance().writeStringToFile(systemcomplet, "sel.js");
+        //lvListAnnounce.notifyDataSetChanged();
         ViewGroupUtils.replaceView(wvPageViewer, lvListAnnounce);
 
         listAnnounce = mModel.getAnnounces();
@@ -241,7 +239,6 @@ public class MainActivity extends AppCompatActivity
                 bun.putString("values",listAnnounce.get(position));
                 intent.putExtra("biz.perin.jibe.ANNOUNCE_INDEX", bun);
                 startActivity(intent);
-                //finish();
             }
         };
         lvListAnnounce.setOnItemClickListener(mMessageClickedHandler);

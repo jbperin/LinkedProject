@@ -51,8 +51,8 @@ public class DownloadService extends Service {
             super.handleMessage(msg);
             Log.d(TAG, " received :" +msg.toString());
             downloadFile();
-            //showNotification(getResources().getString(R.string.notification_catalog_downloaded), "VVS");
-            showNotification("notification_catalog_downloaded", "VVS");
+
+            //showNotification("notification_catalog_downloaded", "VVS");
             stopSelf(msg.arg1);
         }
     }

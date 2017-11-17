@@ -1085,6 +1085,24 @@ public class WebHelper {
         FileHelper.getInstance().writeStringToFile(htmlContent, "Result.html");
         return result;
     }
+    public boolean sendContactMessage(final String name, final String mail, final String subject, final String text) {
+        boolean result = false;
+        String htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/contact/#wpcf7-f93-p27-o1"
+                , new ArrayList<String[]>() {{
+                    add(new String[] {"_wpcf7", "offres"});
+                    add(new String[] {"_wpcf7_version", "4.9"});
+                    add(new String[] {"_wpcf7_locale", "fr_FR"});
+                    add(new String[] {"_wpcf7_unit_tag", "wpcf7-f93-p27-o1"});
+                    add(new String[] {"_wpcf7_container_post", "27"});
+                    add(new String[] {"your-name", name});
+                    add(new String[] {"your-email", mail});
+                    add(new String[] {"your-subject", subject});
+                    add(new String[] {"your-message", text});
+                }});
+        System.out.println(htmlContent);
+        FileHelper.getInstance().writeStringToFile(htmlContent, "ResultSendMessage.html");
+        return result;
+    }
     public boolean publishAnnounce(   ){
         boolean result = false;
         String htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/catalogue/index.php"

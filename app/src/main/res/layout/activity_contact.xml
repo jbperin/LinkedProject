@@ -53,14 +53,15 @@
                 android:layout_height="wrap_content" android:id="@+id/textView5"/>
         <EditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:text="Name"
+                android:layout_height="match_parent"
+                android:inputType="textMultiLine"
                 android:ems="10"
-                android:id="@+id/cntctText" android:singleLine="false" android:layout_weight="0.87"/>
+                android:id="@+id/cntctText" android:layout_weight="0.97" android:text="Bonjour,\n"
+                android:gravity="top|center_vertical"/>
         <Button
                 android:text="Envoyer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/btnSend"/>
+                android:layout_height="wrap_content" android:id="@+id/btnSend"
+                android:gravity="bottom|center_vertical|center_horizontal"/>
     </LinearLayout>
 </RelativeLayout>

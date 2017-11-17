@@ -30,6 +30,8 @@ public class ContactActivity extends AppCompatActivity {
                 System.out.println (String.format("name = %s\nmail=%s\nsubject=%s\nText = %s\n",
                         name, mail, subject, text
                         ));
+                // TODO Check argument before sending
+                WebHelper.getInstance().sendContactMessage(name, mail, subject, text);
                 finish();
             }
         });
