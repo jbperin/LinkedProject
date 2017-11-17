@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -116,6 +117,8 @@ public class MainActivity extends AppCompatActivity
 
 
         wvPageViewer = (WebView) new WebView(this);
+        wvPageViewer.setWebViewClient(new MyWebViewClient(this));
+        //wvPageViewer.addJavascriptInterface(new JavaBridge(this), "JavaBridge");
         wvPageViewer.loadUrl("file:///android_asset/home.html");
 
         ViewGroupUtils.replaceView(lvListAnnounce, wvPageViewer);
@@ -263,7 +266,10 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_announce) {
 
+            ViewGroupUtils.replaceView(wvPageViewer, lvListAnnounce);
+
         } else if (id == R.id.nav_people) {
+
 
         } else if (id == R.id.nav_forums) {
 
@@ -278,7 +284,24 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public class MyWebViewClient extends WebViewClient {
 
+        private Context context;
+
+        public MyWebViewClient(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if(url.equals("lets://ContactActivity")){
+                Intent i = new Intent(context, ContactActivity.class);
+                context.startActivity(i);
+                return true;
+            }
+            return super.shouldOverrideUrlLoading(view, url);
+        }
+    }
     /**
      * Check whether the device is connected, and if so, whether the connection
      * is wifi or mobile (it could be something else).
