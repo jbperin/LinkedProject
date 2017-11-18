@@ -1,12 +1,11 @@
 package biz.perin.jibe.linkedproject;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
@@ -38,21 +37,19 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = "MainActivity";
-    private ModelInterface mModel;
+    //private ModelInterface mModel;
     private ArrayList<String> listAnnounce;
-    private DatabaseHelper dbHelper = null;
-    private WebHelper webHelper = null;
 
-    WebView wvPageViewer;
-    NavigationView navigationView;
-    ListView lvListAnnounce;
+    WebView wvPageViewer = null;
+    NavigationView navigationView = null;
+    ListView lvListAnnounce = null;
 
-    LocalSystemExchange theSel;
-
+    LetsClient mSelClient = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_main);
 
 
@@ -90,31 +87,11 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        FileHelper.getInstance().setContext(this.getApplicationContext());
+
 
         checkNetworkConnection();
 
-        dbHelper = DatabaseHelper.getInstance(this);
-        webHelper = WebHelper.getInstance();
-
-        theSel = new LocalSystemExchange();
-
-
-        ISelReceiver aSelBuilder = new SelBuilder(theSel);
-        WebClient aWebClient = new WebClient();
-
-        webHelper.setSelReceiver(aSelBuilder);
-        webHelper.setWebClient(aWebClient);
-
-
-        mModel = new ModelInterface();
-
-        theSel.attach(mModel);
-        theSel.attach(dbHelper);
-
-        Log.d(TAG, "Starts service");
-        startService(new Intent(getBaseContext(), DownloadService.class));
-
+        mSelClient = LetsClient.getInstance(this);
 
         wvPageViewer = (WebView) new WebView(this);
         wvPageViewer.setWebViewClient(new MyWebViewClient(this));
@@ -122,6 +99,9 @@ public class MainActivity extends AppCompatActivity
         wvPageViewer.loadUrl("file:///android_asset/home.html");
 
         ViewGroupUtils.replaceView(lvListAnnounce, wvPageViewer);
+
+
+        //mSelClient.bindToDownloaderService();
 
         //parent.addView(wvPageViewer, index);
 
@@ -155,11 +135,42 @@ public class MainActivity extends AppCompatActivity
 
 
 
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Bind to LocalService
+        Log.d(TAG, "onStart");
+    }
 
-        //  System.out.println( theSel.getListOfAnnounce());
-//        for (Announce ann : lAnnonces) {
-//            System.out.println(ann);
-//        }
+    @Override
+    protected void onPause() {
+        Log.i(TAG, "onPause");
+        super.onPause();
+    }
+    @Override
+    protected void onRestart() {
+        Log.i(TAG, "onRestart");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.i(TAG, "onResume()");
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
+    public void onDestroy (){
+        super.onDestroy();
+        Log.i(TAG, "onDestroy");
+        mSelClient.finish();
 
     }
 
@@ -208,49 +219,26 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshView() {
-
-//        Gson theGson = new Gson();
-//        String systemcomplet = theGson.toJson(theSel);
-//        //System.out.println(systemcomplet);
-//        FileHelper.getInstance().writeStringToFile(systemcomplet, "sel.js");
-        //lvListAnnounce.notifyDataSetChanged();
-        ViewGroupUtils.replaceView(wvPageViewer, lvListAnnounce);
-
-        listAnnounce = mModel.getAnnounces();
-
-
-        TextView tv = (TextView) findViewById(R.id.displayedText);
-        tv.setText("Il y a " + listAnnounce.size() + " annonces.");
-
-        //getLayoutInflater().inflate(R.id.content_main, (ViewGroup)tv.getParent(), false);
-        //tv.getParent()
-        //ListView lv = (ListView) findViewById(R.id.list_of_annon_announce);
-        lvListAnnounce.setAdapter(new AnnounceAdapter(this, listAnnounce));
-        final Activity act = this;
-        // Create a message handling object as an anonymous class.
-        AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView parent, View v, int position, long id) {
-                System.out.println (String.format ("Element clicked positon = %d, id = %x ", position, id));
-                Intent intent = new Intent (act, ViewAnnounceActivity.class);
-                Bundle bun = new Bundle();
-                bun.putInt("position", position);
-                bun.putLong("id", id);
-                bun.putString("values",listAnnounce.get(position));
-                intent.putExtra("biz.perin.jibe.ANNOUNCE_INDEX", bun);
-                startActivity(intent);
-            }
-        };
-        lvListAnnounce.setOnItemClickListener(mMessageClickedHandler);
-    }
-
+    // This callback is called only when there is a saved instance previously saved using
+// onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
+// other state here, possibly usable after onStart() has completed.
+// The savedInstanceState Bundle is same as the one used in onCreate().
     @Override
-    public void onDestroy (){
-        super.onDestroy();
-        Log.d(TAG, "Stopping service");
-        stopService(new Intent(getBaseContext(), DownloadService.class));
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.i(TAG, "onRestoreInstanceState");
+//        mTextView.setText(savedInstanceState.getString(TEXT_VIEW_KEY));
     }
 
+    // invoked when the activity may be temporarily destroyed, save the instance state here
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        Log.i(TAG, "onSaveInstanceState");
+        outState.putString("toto", "Value");
+        //outState.putString(TEXT_VIEW_KEY, mTextView.getText());
+
+        // call superclass to save any view hierarchy
+        super.onSaveInstanceState(outState);
+    }
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -262,8 +250,8 @@ public class MainActivity extends AppCompatActivity
             ViewGroupUtils.replaceView(lvListAnnounce, wvPageViewer);
 
         } else if (id == R.id.nav_announce) {
-
-            ViewGroupUtils.replaceView(wvPageViewer, lvListAnnounce);
+            refreshView();
+            //ViewGroupUtils.replaceView(wvPageViewer, lvListAnnounce);
 
         } else if (id == R.id.nav_people) {
 
@@ -299,6 +287,38 @@ public class MainActivity extends AppCompatActivity
             return super.shouldOverrideUrlLoading(view, url);
         }
     }
+
+
+    private void refreshView() {
+
+        ViewGroupUtils.replaceView(wvPageViewer, lvListAnnounce);
+
+        listAnnounce = mSelClient.getModel().getAnnounces();
+
+
+        TextView tv = (TextView) findViewById(R.id.displayedText);
+        tv.setText("Il y a " + listAnnounce.size() + " annonces.");
+
+
+        lvListAnnounce.setAdapter(new AnnounceAdapter(this, listAnnounce));
+        final Activity act = this;
+
+        // Create a message handling object as an anonymous class.
+        AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                System.out.println (String.format ("Element clicked positon = %d, id = %x ", position, id));
+                Intent intent = new Intent (act, ViewAnnounceActivity.class);
+                Bundle bun = new Bundle();
+                bun.putInt("position", position);
+                bun.putLong("id", id);
+                bun.putString("values",listAnnounce.get(position));
+                intent.putExtra("biz.perin.jibe.ANNOUNCE_INDEX", bun);
+                startActivity(intent);
+            }
+        };
+        lvListAnnounce.setOnItemClickListener(mMessageClickedHandler);
+    }
+
     /**
      * Check whether the device is connected, and if so, whether the connection
      * is wifi or mobile (it could be something else).
@@ -324,4 +344,7 @@ public class MainActivity extends AppCompatActivity
         }
         // END_INCLUDE(connect)
     }
+
+
+
 }

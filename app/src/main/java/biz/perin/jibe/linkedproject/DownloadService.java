@@ -33,12 +33,16 @@ public class DownloadService extends Service {
     private final String TAG = "DownloadService";
     SharedPreferences preferences;
 
+    private final DownloaderServiceBinder mBinder = new DownloaderServiceBinder();
 
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
     private NotificationManager mNM;
     String downloadUrl;
     public static boolean serviceState = false;
+    Messenger mMessenger;
+
+    HandlerThread thread;
 
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
@@ -49,26 +53,45 @@ public class DownloadService extends Service {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            switch (msg.what) {
+//                case MSG_SAY_HELLO:
+//                    Toast.makeText(getApplicationContext(), "hello!", Toast.LENGTH_SHORT).show();
+//                    break;
+                default:
+                    super.handleMessage(msg);
+            }
             Log.d(TAG, " received :" +msg.toString());
             downloadFile();
-
-            //showNotification("notification_catalog_downloaded", "VVS");
-            stopSelf(msg.arg1);
+            //stopSelf(msg.arg1);
         }
     }
+    public void VisitAnnounceAnonymously(){
+        Log.d(TAG, "Start downloading anonymous announce ..");
+        WebHelper.getInstance().getAnonymousAnnounces(false);
+        Log.d(TAG, "Anonymous announce were downloaded.");
+    }
+
+    public class DownloaderServiceBinder extends Binder {
+        public DownloadService getService() {
+            return DownloadService.this;
+        }
+
+    }
+
 
 
     @Override
     public void onCreate() {
         Log.d(TAG, "Service created");
         serviceState = true;
-        mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        HandlerThread thread = new HandlerThread("ServiceStartArguments", android.os.Process.THREAD_PRIORITY_BACKGROUND);
+        thread = new HandlerThread("ServiceStartArguments", android.os.Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
 
         // Get the HandlerThread's Looper and use it for our Handler
         mServiceLooper = thread.getLooper();
+
         mServiceHandler = new ServiceHandler(mServiceLooper);
+        mMessenger = new Messenger(mServiceHandler);
 
     }
 
@@ -99,15 +122,14 @@ public class DownloadService extends Service {
 
         Log.d(TAG, "DESTROY");
         serviceState = false;
-        //Toast.makeText(this, "service done", Toast.LENGTH_SHORT).show();
     }
-
 
     @Override
     public IBinder onBind(Intent intent) {
-        // We don't provide binding, so return null
-        return null;
+        Log.d(TAG, "onBind " +intent.toString());
+        return mBinder;
     }
+
 
 
     public void downloadFile() {
@@ -118,12 +140,10 @@ public class DownloadService extends Service {
         //double GB_Available = (avail_sd_space / 1073741824);
         double MB_Available = (avail_sd_space / 10485783);
         //System.out.println("Available MB : " + MB_Available);
-        Log.d("MB", "" + MB_Available);
+        Log.d(TAG, "MB : " + MB_Available);
 
 
 
-        WebHelper.getInstance().getAnonymousAnnounces(false);
-        Log.d(TAG, "Anonymous announce were downloaded ..");
 
         SharedPreferences UserPreferences = getSharedPreferences  ("UserPreferences", MODE_PRIVATE );
         if (UserPreferences.contains("login") && UserPreferences.contains("password") ){
@@ -155,87 +175,9 @@ public class DownloadService extends Service {
         }
 
 
-        Log.d(TAG, " Content Downlaoded.");
+        Log.d(TAG, " Content Downloaded.");
 
     }
 
 
-    void showNotification(String message, String title) {
-        // In this sample, we'll use the same text for the ticker and the expanded notification
-        CharSequence text = message;
-
-        // Set the icon, scrolling text and timestamp
-        Notification notification = new Notification(R.drawable.ic_menu_forums, "vvs",
-                System.currentTimeMillis());
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        //The PendingIntent to launch our activity if the user selects this notification
-        PendingIntent contentIntent = PendingIntent.getActivity(this.getBaseContext(), 0,
-                intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        // Set the info for the views that show in the notification panel.
-//        notification.setLatestEventInfo(this, title,
-//                text, contentIntent);
-        // Send the notification.
-        // We use a layout id because it is a unique number.  We use it later to cancel.
-        mNM.notify(R.string.app_name, notification);
-    }
-
-//    public void downloadFile(String fileURL, String fileName) {
-//
-//        StatFs stat_fs = new StatFs(Environment.getExternalStorageDirectory().getPath());
-//        double avail_sd_space = (double) stat_fs.getAvailableBlocks() * (double) stat_fs.getBlockSize();
-//        //double GB_Available = (avail_sd_space / 1073741824);
-//        double MB_Available = (avail_sd_space / 10485783);
-//        //System.out.println("Available MB : " + MB_Available);
-//        Log.d("MB", "" + MB_Available);
-//        try {
-//            File root = new File(Environment.getExternalStorageDirectory() + "/vvveksperten");
-//            if (root.exists() && root.isDirectory()) {
-//
-//            } else {
-//                root.mkdir();
-//            }
-//            Log.d("CURRENT PATH", root.getPath());
-//            URL u = new URL(fileURL);
-//            HttpURLConnection c = (HttpURLConnection) u.openConnection();
-//            c.setRequestMethod("GET");
-//            c.setDoOutput(true);
-//            c.connect();
-//            int fileSize = c.getContentLength() / 1048576;
-//            Log.d("FILESIZE", "" + fileSize);
-//            if (MB_Available <= fileSize) {
-//                this.showNotification("notification_no_memory", "notification_error");
-//                c.disconnect();
-//                return;
-//            }
-//
-//            FileOutputStream f = new FileOutputStream(new File(root.getPath(), fileName));
-//
-//            InputStream in = c.getInputStream();
-//
-//
-//            byte[] buffer = new byte[1024];
-//            int len1 = 0;
-//            while ((len1 = in.read(buffer)) > 0) {
-//                f.write(buffer, 0, len1);
-//            }
-//            f.close();
-//            File file = new File(root.getAbsolutePath() + "/" + "some.pdf");
-//            if (file.exists()) {
-//                file.delete();
-//                Log.d("FILE-DELETE", "YES");
-//            } else {
-//                Log.d("FILE-DELETE", "NO");
-//            }
-//            File from = new File(root.getAbsolutePath() + "/" + fileName);
-//            File to = new File(root.getAbsolutePath() + "/" + "some.pdf");
-//
-//
-//        } catch (Exception e) {
-//            Log.d("Downloader", e.getMessage());
-//
-//        }
-//    }
 }
