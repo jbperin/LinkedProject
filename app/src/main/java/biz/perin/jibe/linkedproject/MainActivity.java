@@ -100,21 +100,6 @@ public class MainActivity extends AppCompatActivity
 
         ViewGroupUtils.replaceView(lvListAnnounce, wvPageViewer);
 
-
-        //mSelClient.bindToDownloaderService();
-
-        //parent.addView(wvPageViewer, index);
-
-
-//        refreshView();
-
-//        SharedPreferences UserPreferences = getSharedPreferences  ("UserPreferences", MODE_PRIVATE );
-//        if (UserPreferences.contains("login") && UserPreferences.contains("password") ){
-//            WebHelper.getInstance().setAuthenticationInformation(
-//                    UserPreferences.getString("login", "defaultlogin")
-//                    , UserPreferences.getString("password", "defaultpassword"));
-//        }
-//
 //        WebHelper.getInstance().getAnonymousAnnounces(false);
 //        WebHelper.getInstance().setAuthenticationInformation(userLogin, userPassword);
 //        WebHelper.getInstance().getAnnounces(false);

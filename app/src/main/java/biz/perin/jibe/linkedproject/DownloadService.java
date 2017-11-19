@@ -35,41 +35,15 @@ public class DownloadService extends Service {
 
     private final DownloaderServiceBinder mBinder = new DownloaderServiceBinder();
 
-    private Looper mServiceLooper;
-    private ServiceHandler mServiceHandler;
-    private NotificationManager mNM;
+//    private Looper mServiceLooper;
+//    private ServiceHandler mServiceHandler;
+//    private NotificationManager mNM;
     String downloadUrl;
     public static boolean serviceState = false;
-    Messenger mMessenger;
+//    Messenger mMessenger;
 
     HandlerThread thread;
 
-    // Handler that receives messages from the thread
-    private final class ServiceHandler extends Handler {
-        public ServiceHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-//                case MSG_SAY_HELLO:
-//                    Toast.makeText(getApplicationContext(), "hello!", Toast.LENGTH_SHORT).show();
-//                    break;
-                default:
-                    super.handleMessage(msg);
-            }
-            Log.d(TAG, " received :" +msg.toString());
-            downloadFile();
-            //stopSelf(msg.arg1);
-        }
-    }
-    public void VisitAnnounceAnonymously(){
-        Log.d(TAG, "Start downloading anonymous announce ..");
-        WebHelper.getInstance().getAnonymousAnnounces(false);
-        Log.d(TAG, "Anonymous announce were downloaded.");
-    }
 
     public class DownloaderServiceBinder extends Binder {
         public DownloadService getService() {
@@ -84,15 +58,6 @@ public class DownloadService extends Service {
     public void onCreate() {
         Log.d(TAG, "Service created");
         serviceState = true;
-        thread = new HandlerThread("ServiceStartArguments", android.os.Process.THREAD_PRIORITY_BACKGROUND);
-        thread.start();
-
-        // Get the HandlerThread's Looper and use it for our Handler
-        mServiceLooper = thread.getLooper();
-
-        mServiceHandler = new ServiceHandler(mServiceLooper);
-        mMessenger = new Messenger(mServiceHandler);
-
     }
 
 
@@ -107,11 +72,6 @@ public class DownloadService extends Service {
 
             this.downloadUrl = downloadUrl;
         }
-
-        Message msg = mServiceHandler.obtainMessage();
-        msg.arg1 = startId;
-        mServiceHandler.sendMessage(msg);
-
         // If we get killed, after returning from here, restart
         return START_STICKY;
     }
@@ -130,7 +90,21 @@ public class DownloadService extends Service {
         return mBinder;
     }
 
+    public void VisitAnnounceAnonymously(){
+        Log.d(TAG, "Start thread downloading anonymous announce ..");
 
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                WebHelper.getInstance().getAnonymousAnnounces(true);
+                Log.d(TAG, "Anonymous announce were downloaded.");
+                //Stop service once it finishes its task
+                stopSelf();
+            }
+        }).start();
+
+    }
 
     public void downloadFile() {
 

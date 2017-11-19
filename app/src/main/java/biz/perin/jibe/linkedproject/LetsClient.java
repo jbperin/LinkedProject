@@ -100,14 +100,6 @@ public class LetsClient {
     public void finish() {
         mContext.unbindService(downloaderServiceConnection);
         mContext.stopService(new Intent(mContext, DownloadService.class));
-//        mBound = false;
-//        if (downloaderService != null) {
-//            Log.d(TAG, "Stopping service");
-//            unbindService(downloaderServiceConnection);
-//
-//            downloaderService = null;
-
-//        }
 
     }
 }

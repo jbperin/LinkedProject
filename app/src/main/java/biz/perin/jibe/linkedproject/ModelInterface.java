@@ -89,17 +89,7 @@ public class ModelInterface implements IModelGUI, LetsObserver {
     @Override
     public ArrayList<String> getAnnounces() {
 
-//        String SelJson = FileHelper.getInstance().readStringFromFile("sel.js");
-//
-//        JsonObject jsobj = new JsonParser().parse(SelJson).getAsJsonObject();
-//        if(jsobj.has("listOfAnnounce")) {
-//            JsonArray jsListOfAnnounce = jsobj.get("listOfAnnounce").getAsJsonArray();
-//            for (JsonElement jsAnnounce : jsListOfAnnounce) {
-//                lAnn.add(jsAnnounce.toString());
-//
-//            }
-//
-//        }
+
         return (lAnn);
 
     }
