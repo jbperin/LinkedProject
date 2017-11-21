@@ -52,7 +52,11 @@ public class DownloadService extends Service {
 
     }
 
-
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(TAG, "onUnbind");
+        return super.onUnbind(intent);
+    }
 
     @Override
     public void onCreate() {
@@ -93,7 +97,6 @@ public class DownloadService extends Service {
     public void VisitAnnounceAnonymously(){
         Log.d(TAG, "Start thread downloading anonymous announce ..");
 
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -122,7 +125,7 @@ public class DownloadService extends Service {
         SharedPreferences UserPreferences = getSharedPreferences  ("UserPreferences", MODE_PRIVATE );
         if (UserPreferences.contains("login") && UserPreferences.contains("password") ){
 
-            Log.d(TAG, "Authentication Info availablee, connecting ..");
+            Log.d(TAG, "Authentication Info available, connecting ..");
 
             WebHelper.getInstance().setAuthenticationInformation(
                     UserPreferences.getString("login", "defaultlogin")

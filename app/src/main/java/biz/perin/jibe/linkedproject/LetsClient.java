@@ -27,14 +27,10 @@ public class LetsClient {
     boolean mBound = false;
     private Context mContext;
 
-    public ModelInterface getModel() {
-        return mModel;
-    }
+
 
     private ModelInterface mModel;
-    public void setDownloaderService(DownloadService downloaderService) {
-        this.downloaderService = downloaderService;
-    }
+
 
     DownloadService downloaderService = null;
 
@@ -70,6 +66,17 @@ public class LetsClient {
         bindToDownloaderService();
 
     }
+    public void setModel(ModelInterface modelInterface) {
+        mModel = modelInterface;
+    }
+    public ModelInterface getModel() {
+        return mModel;
+    }
+
+    public void setDownloaderService(DownloadService downloaderService) {
+        this.downloaderService = downloaderService;
+    }
+
     public void bindToDownloaderService() {
 
         Log.i(TAG, "bindToDownloaderService()");
@@ -79,7 +86,7 @@ public class LetsClient {
         mContext.bindService(intent, downloaderServiceConnection, Context.BIND_AUTO_CREATE); // no Context.BIND_AUTO_CREATE, because service will be started by startService and thus live longer than this activity
     }
 
-        private ServiceConnection downloaderServiceConnection = new ServiceConnection() {
+    private ServiceConnection downloaderServiceConnection = new ServiceConnection() {
         private final String TAG = "downloaderServiceConnection";
 
         public void onServiceConnected(ComponentName className, IBinder binder) {
@@ -98,8 +105,10 @@ public class LetsClient {
     };
 
     public void finish() {
-        mContext.unbindService(downloaderServiceConnection);
         mContext.stopService(new Intent(mContext, DownloadService.class));
+        mContext.unbindService(downloaderServiceConnection);
 
     }
+
+
 }

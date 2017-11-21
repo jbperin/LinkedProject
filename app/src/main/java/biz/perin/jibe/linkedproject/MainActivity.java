@@ -30,6 +30,7 @@ import biz.perin.jibe.linkedproject.model.SelBuilder;
 import biz.perin.jibe.linkedproject.view.AnnounceAdapter;
 import biz.perin.jibe.linkedproject.view.ViewGroupUtils;
 import biz.perin.jibe.linkedproject.web.WebClient;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -39,12 +40,13 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = "MainActivity";
     //private ModelInterface mModel;
     private ArrayList<String> listAnnounce;
-
+    View currentView;
     WebView wvPageViewer = null;
     NavigationView navigationView = null;
     ListView lvListAnnounce = null;
 
     LetsClient mSelClient = null;
+    private AnnounceAdapter announceAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,19 +81,41 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        lvListAnnounce = (ListView) findViewById(R.id.list_of_annon_announce);
+
         //ViewGroup parent = (ViewGroup) C.getParent();
         //int index = parent.indexOfChild(C);
        // parent.removeView(C);
         //C=getLayoutInflater().inflate(R.layout.activity_main, parent, false);
 
+        mSelClient = LetsClient.getInstance(this);
 
+        listAnnounce = mSelClient.getModel().getAnnounces();
+        lvListAnnounce = (ListView) findViewById(R.id.list_of_annon_announce);
+        announceAdapter = new AnnounceAdapter(this, listAnnounce);
+        lvListAnnounce.setAdapter(announceAdapter);
+
+        final Activity act = this;
+
+        // Create a message handling object as an anonymous class.
+        AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                System.out.println (String.format ("Element clicked positon = %d, id = %x ", position, id));
+                Intent intent = new Intent (act, ViewAnnounceActivity.class);
+                Bundle bun = new Bundle();
+                bun.putInt("position", position);
+                bun.putLong("id", id);
+                bun.putString("values",listAnnounce.get(position));
+                intent.putExtra("biz.perin.jibe.ANNOUNCE_INDEX", bun);
+                startActivity(intent);
+            }
+        };
+        lvListAnnounce.setOnItemClickListener(mMessageClickedHandler);
 
 
 
         checkNetworkConnection();
 
-        mSelClient = LetsClient.getInstance(this);
+
 
         wvPageViewer = (WebView) new WebView(this);
         wvPageViewer.setWebViewClient(new MyWebViewClient(this));
@@ -99,6 +123,9 @@ public class MainActivity extends AppCompatActivity
         wvPageViewer.loadUrl("file:///android_asset/home.html");
 
         ViewGroupUtils.replaceView(lvListAnnounce, wvPageViewer);
+
+        currentView = wvPageViewer;
+
 
 //        WebHelper.getInstance().getAnonymousAnnounces(false);
 //        WebHelper.getInstance().setAuthenticationInformation(userLogin, userPassword);
@@ -141,12 +168,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onResume() {
-        Log.i(TAG, "onResume()");
+        Log.d(TAG, "onResume()");
         super.onResume();
     }
 
     @Override
     protected void onStop() {
+        Log.d(TAG, "onStop");
         super.onStop();
 
     }
@@ -154,8 +182,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDestroy (){
         super.onDestroy();
-        Log.i(TAG, "onDestroy");
-        mSelClient.finish();
+        Log.d(TAG, "onDestroy");
+        //mSelClient.finish();
 
     }
 
@@ -211,17 +239,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.i(TAG, "onRestoreInstanceState");
-//        mTextView.setText(savedInstanceState.getString(TEXT_VIEW_KEY));
+        String strModel = savedInstanceState.getString("model");
+        mSelClient.setModel(new Gson().fromJson(strModel, ModelInterface.class));
     }
 
     // invoked when the activity may be temporarily destroyed, save the instance state here
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Log.i(TAG, "onSaveInstanceState");
-        outState.putString("toto", "Value");
-        //outState.putString(TEXT_VIEW_KEY, mTextView.getText());
-
-        // call superclass to save any view hierarchy
+        outState.putString("model", new Gson().toJson(mSelClient.getModel()).toString());
         super.onSaveInstanceState(outState);
     }
     @SuppressWarnings("StatementWithEmptyBody")
@@ -231,11 +257,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-
-            ViewGroupUtils.replaceView(lvListAnnounce, wvPageViewer);
-
+            if (currentView != wvPageViewer) {
+                ViewGroupUtils.replaceView(currentView, wvPageViewer);
+                currentView = wvPageViewer;
+            }
         } else if (id == R.id.nav_announce) {
-            refreshView();
+            if (currentView != lvListAnnounce) {
+                announceAdapter.notifyDataSetChanged();
+                ViewGroupUtils.replaceView(currentView, lvListAnnounce);
+                currentView = lvListAnnounce;
+            }
+            //refreshView();
             //ViewGroupUtils.replaceView(wvPageViewer, lvListAnnounce);
 
         } else if (id == R.id.nav_people) {
@@ -278,30 +310,15 @@ public class MainActivity extends AppCompatActivity
 
         ViewGroupUtils.replaceView(wvPageViewer, lvListAnnounce);
 
-        listAnnounce = mSelClient.getModel().getAnnounces();
+
 
 
         TextView tv = (TextView) findViewById(R.id.displayedText);
         tv.setText("Il y a " + listAnnounce.size() + " annonces.");
 
 
-        lvListAnnounce.setAdapter(new AnnounceAdapter(this, listAnnounce));
-        final Activity act = this;
 
-        // Create a message handling object as an anonymous class.
-        AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView parent, View v, int position, long id) {
-                System.out.println (String.format ("Element clicked positon = %d, id = %x ", position, id));
-                Intent intent = new Intent (act, ViewAnnounceActivity.class);
-                Bundle bun = new Bundle();
-                bun.putInt("position", position);
-                bun.putLong("id", id);
-                bun.putString("values",listAnnounce.get(position));
-                intent.putExtra("biz.perin.jibe.ANNOUNCE_INDEX", bun);
-                startActivity(intent);
-            }
-        };
-        lvListAnnounce.setOnItemClickListener(mMessageClickedHandler);
+
     }
 
     /**
