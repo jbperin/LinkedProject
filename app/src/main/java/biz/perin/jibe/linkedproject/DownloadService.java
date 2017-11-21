@@ -94,7 +94,7 @@ public class DownloadService extends Service {
         return mBinder;
     }
 
-    public void VisitAnnounceAnonymously(){
+    public void visitAnnounceAnonymously(){
         Log.d(TAG, "Start thread downloading anonymous announce ..");
 
         new Thread(new Runnable() {
@@ -103,7 +103,7 @@ public class DownloadService extends Service {
                 WebHelper.getInstance().getAnonymousAnnounces(true);
                 Log.d(TAG, "Anonymous announce were downloaded.");
                 //Stop service once it finishes its task
-                stopSelf();
+                //stopSelf();
             }
         }).start();
 

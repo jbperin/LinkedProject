@@ -23,8 +23,8 @@ public class LetsClient {
 
     private DatabaseHelper dbHelper = null;
     private WebHelper webHelper = null;
-    LocalSystemExchange theSel = null;
-    boolean mBound = false;
+    private LocalSystemExchange theSel = null;
+    private boolean mBound = false;
     private Context mContext;
 
 
@@ -32,7 +32,7 @@ public class LetsClient {
     private ModelInterface mModel;
 
 
-    DownloadService downloaderService = null;
+    private DownloadService downloaderService = null;
 
     public static LetsClient getInstance(Context context) {
 
@@ -93,7 +93,7 @@ public class LetsClient {
             Log.d("ServiceConnection", "connected");
             mBound = true;
             setDownloaderService(((DownloadService.DownloaderServiceBinder) binder).getService());
-            downloaderService.VisitAnnounceAnonymously();
+            downloaderService.visitAnnounceAnonymously();
 
         }
         //binder comes from server to communicate with method's of
