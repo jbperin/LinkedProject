@@ -18,12 +18,10 @@ public class ViewAnnounceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_announce);
         Log.d(TAG, "on Create");
-        Bundle bun = getIntent().getBundleExtra("biz.perin.jibe.ANNOUNCE_INDEX");
-        int position = bun.getInt("position");
-        String values = bun.getString("values");
-        HashMap<String, String> dictValues = MyHelper.json2dict(values);
+        String jsValues = getIntent().getStringExtra("biz.perin.jibe.ANNOUNCE_DATA");
+        HashMap<String, String> dictValues = MyHelper.json2dict(jsValues);
 
-        System.out.println(values);
+        System.out.println(jsValues);
 
         ImageView tvDirection = (ImageView) findViewById(R.id.ann_direction);
         TextView tvIdAnnonce = (TextView) findViewById(R.id.idAnn);

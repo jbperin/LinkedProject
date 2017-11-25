@@ -1,14 +1,13 @@
 package biz.perin.jibe.linkedproject;
 
-import android.app.Activity;
 import android.content.*;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.StrictMode;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,36 +16,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
-import biz.perin.jibe.linkedproject.database.DatabaseHelper;
-import biz.perin.jibe.linkedproject.file.FileHelper;
-import biz.perin.jibe.linkedproject.model.ISelReceiver;
-import biz.perin.jibe.linkedproject.model.LocalSystemExchange;
-import biz.perin.jibe.linkedproject.model.SelBuilder;
-import biz.perin.jibe.linkedproject.view.AnnounceAdapter;
-import biz.perin.jibe.linkedproject.view.ViewGroupUtils;
-import biz.perin.jibe.linkedproject.web.WebClient;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener
+        ,AnnounceFragment.OnListAnnounceInteractionListener
+        ,AnnounceFragment.ListAnnounceDataProvider
+{
 
     private final String TAG = "MainActivity";
-    //private ModelInterface mModel;
-    private ArrayList<String> listAnnounce;
-    View currentView;
-    WebView wvPageViewer = null;
+
     NavigationView navigationView = null;
-    ListView lvListAnnounce = null;
 
     LetsClient mSelClient = null;
-    private AnnounceAdapter announceAdapter;
+
+    FragmentManager fragmentManager = getSupportFragmentManager();
+    WebFragment webFragment = new WebFragment();
+    AnnounceFragment announceFragment = new AnnounceFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,72 +71,25 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        //ViewGroup parent = (ViewGroup) C.getParent();
-        //int index = parent.indexOfChild(C);
-       // parent.removeView(C);
-        //C=getLayoutInflater().inflate(R.layout.activity_main, parent, false);
-
         mSelClient = LetsClient.getInstance(this);
-
-        listAnnounce = mSelClient.getModel().getAnnounces();
-        lvListAnnounce = (ListView) findViewById(R.id.list_of_annon_announce);
-        announceAdapter = new AnnounceAdapter(this, listAnnounce);
-        lvListAnnounce.setAdapter(announceAdapter);
-
-        final Activity act = this;
-
-        // Create a message handling object as an anonymous class.
-        AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView parent, View v, int position, long id) {
-                System.out.println (String.format ("Element clicked positon = %d, id = %x ", position, id));
-                Intent intent = new Intent (act, ViewAnnounceActivity.class);
-                Bundle bun = new Bundle();
-                bun.putInt("position", position);
-                bun.putLong("id", id);
-                bun.putString("values",listAnnounce.get(position));
-                intent.putExtra("biz.perin.jibe.ANNOUNCE_INDEX", bun);
-                startActivity(intent);
-            }
-        };
-        lvListAnnounce.setOnItemClickListener(mMessageClickedHandler);
-
-
 
         checkNetworkConnection();
 
-
-
-        wvPageViewer = (WebView) new WebView(this);
-        wvPageViewer.setWebViewClient(new MyWebViewClient(this));
-        //wvPageViewer.addJavascriptInterface(new JavaBridge(this), "JavaBridge");
-        wvPageViewer.loadUrl("file:///android_asset/home.html");
-
-        ViewGroupUtils.replaceView(lvListAnnounce, wvPageViewer);
-
-        currentView = wvPageViewer;
-
-
-//        WebHelper.getInstance().getAnonymousAnnounces(false);
-//        WebHelper.getInstance().setAuthenticationInformation(userLogin, userPassword);
-//        WebHelper.getInstance().getAnnounces(false);
-//        WebHelper.getInstance().getAnnuaire(false);
-//        WebHelper.getInstance().getAccountInfo (false);
-//        WebHelper.getInstance().getPersonnalInfo(false);
-//        WebHelper.getInstance().getForums(false);
-
-
-        //WebHelper.getInstance().getMyAnnounces(false);
-
-        //WebHelper.getInstance().publishTansaction();
-        //WebHelper.getInstance().publishSold();
-        //WebHelper.getInstance().publishInfo();
-        //WebHelper.getInstance().publishAnnounce();
-        //WebHelper.getInstance().publishUrgentAnnounce();
-        //WebHelper.getInstance().unpublishAnnounce();
-
+        FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.content_main, webFragment);
+        fragmentTransaction.commit();
 
 
     }
+
+    @Override
+    public void onListAnnounceInteraction(String jsItem) {
+        Log.d(TAG, "onListAnnounceInteraction");
+        Intent intent = new Intent (this, ViewAnnounceActivity.class);
+        intent.putExtra("biz.perin.jibe.ANNOUNCE_DATA", jsItem);
+        startActivity(intent);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -184,7 +126,6 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         Log.d(TAG, "onDestroy");
         //mSelClient.finish();
-
     }
 
     @Override
@@ -233,9 +174,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     // This callback is called only when there is a saved instance previously saved using
-// onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
-// other state here, possibly usable after onStart() has completed.
-// The savedInstanceState Bundle is same as the one used in onCreate().
+    // onSaveInstanceState(). We restore some state in onCreate() while we can optionally restore
+    // other state here, possibly usable after onStart() has completed.
+    // The savedInstanceState Bundle is same as the one used in onCreate().
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.i(TAG, "onRestoreInstanceState");
@@ -250,6 +191,7 @@ public class MainActivity extends AppCompatActivity
         outState.putString("model", new Gson().toJson(mSelClient.getModel()).toString());
         super.onSaveInstanceState(outState);
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -257,18 +199,15 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            if (currentView != wvPageViewer) {
-                ViewGroupUtils.replaceView(currentView, wvPageViewer);
-                currentView = wvPageViewer;
-            }
+            FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, webFragment);
+            fragmentTransaction.commit();
+
         } else if (id == R.id.nav_announce) {
-            if (currentView != lvListAnnounce) {
-                announceAdapter.notifyDataSetChanged();
-                ViewGroupUtils.replaceView(currentView, lvListAnnounce);
-                currentView = lvListAnnounce;
-            }
-            //refreshView();
-            //ViewGroupUtils.replaceView(wvPageViewer, lvListAnnounce);
+            FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.content_main, announceFragment);
+            fragmentTransaction.addToBackStack("nav2announce");
+            fragmentTransaction.commit();
 
         } else if (id == R.id.nav_people) {
 
@@ -286,39 +225,9 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public class MyWebViewClient extends WebViewClient {
-
-        private Context context;
-
-        public MyWebViewClient(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if(url.equals("lets://ContactActivity")){
-                Intent i = new Intent(context, ContactActivity.class);
-                context.startActivity(i);
-                return true;
-            }
-            return super.shouldOverrideUrlLoading(view, url);
-        }
-    }
-
-
     private void refreshView() {
-
-        ViewGroupUtils.replaceView(wvPageViewer, lvListAnnounce);
-
-
-
-
         TextView tv = (TextView) findViewById(R.id.displayedText);
-        tv.setText("Il y a " + listAnnounce.size() + " annonces.");
-
-
-
-
+        tv.setText("To be defined");
     }
 
     /**
@@ -348,5 +257,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
+    @Override
+    public List<String> getListAnnounce() {
+        return mSelClient.getModel().getAnnounces();
+    }
 }

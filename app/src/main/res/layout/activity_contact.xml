@@ -62,6 +62,6 @@
                 android:text="Envoyer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/btnSend"
-                android:gravity="bottom|center_vertical|center_horizontal"/>
+                android:gravity="center"/>
     </LinearLayout>
 </RelativeLayout>

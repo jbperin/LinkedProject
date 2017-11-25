@@ -100,7 +100,7 @@ public class DownloadService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                WebHelper.getInstance().getAnonymousAnnounces(true);
+                WebHelper.getInstance().getAnonymousAnnounces(false);
                 Log.d(TAG, "Anonymous announce were downloaded.");
                 //Stop service once it finishes its task
                 stopSelf();

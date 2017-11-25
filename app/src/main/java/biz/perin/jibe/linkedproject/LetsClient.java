@@ -17,20 +17,17 @@ import biz.perin.jibe.linkedproject.web.WebClient;
  * Created by Jean-Baptiste PERIN on 18/11/2017.
  */
 public class LetsClient {
+
     private final String TAG = "LetsClient";
     private static LetsClient ourInstance = null;
 
-
     private DatabaseHelper dbHelper = null;
     private WebHelper webHelper = null;
-    LocalSystemExchange theSel = null;
+    private LocalSystemExchange theSel = null;
     boolean mBound = false;
     private Context mContext;
 
-
-
     private ModelInterface mModel;
-
 
     DownloadService downloaderService = null;
 
@@ -85,6 +82,27 @@ public class LetsClient {
         //startService(intent);
         mContext.bindService(intent, downloaderServiceConnection, Context.BIND_AUTO_CREATE); // no Context.BIND_AUTO_CREATE, because service will be started by startService and thus live longer than this activity
     }
+
+
+    //        WebHelper.getInstance().getAnonymousAnnounces(false);
+//        WebHelper.getInstance().setAuthenticationInformation(userLogin, userPassword);
+//        WebHelper.getInstance().getAnnounces(false);
+//        WebHelper.getInstance().getAnnuaire(false);
+//        WebHelper.getInstance().getAccountInfo (false);
+//        WebHelper.getInstance().getPersonnalInfo(false);
+//        WebHelper.getInstance().getForums(false);
+
+
+    //WebHelper.getInstance().getMyAnnounces(false);
+
+    //WebHelper.getInstance().publishTansaction();
+    //WebHelper.getInstance().publishSold();
+    //WebHelper.getInstance().publishInfo();
+    //WebHelper.getInstance().publishAnnounce();
+    //WebHelper.getInstance().publishUrgentAnnounce();
+    //WebHelper.getInstance().unpublishAnnounce();
+
+
 
     private ServiceConnection downloaderServiceConnection = new ServiceConnection() {
         private final String TAG = "downloaderServiceConnection";
