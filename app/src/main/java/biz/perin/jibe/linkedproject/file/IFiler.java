@@ -35,6 +35,8 @@ public interface IFiler {
 //            e.printStackTrace();
 //        }
 //    }
+    public boolean fileExists(String filename);
+
     public String readStringFromFile(String filename);
 
 //    default String readStringFromFile(String filename)  {

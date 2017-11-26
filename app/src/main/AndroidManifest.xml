@@ -35,6 +35,9 @@ uses-permission android:name="android.permission.GET_ACCOUNTS"/>
         </activity>
 
         <service android:name=".DownloadService"/>
+        <service
+                android:name=".SurferService"
+                android:exported="false"/>
 
         <activity android:name=".ViewAnnounceActivity">
         </activity>

@@ -1,5 +1,6 @@
 package biz.perin.jibe.linkedproject;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -120,6 +121,12 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("login", login);
             editor.putString("password", password);
             editor.commit();
+            WebHelper.getInstance().setAuthenticationInformation(
+                    UserPreferences.getString("login", "defaultlogin")
+                    , UserPreferences.getString("password", "defaultpassword"));
+            Intent msgIntent = new Intent(this, SurferService.class);
+            msgIntent.putExtra("RessourceType","LOGIN");
+            startService(msgIntent);
             finish();
 
         }

@@ -85,4 +85,11 @@ public class FileHelper implements IFiler{
         return stringBuilder.toString();
 
     }
+
+    @Override
+    public boolean fileExists(String filename) {
+        File file = new File(filename);
+        return(file.exists());
+
+    }
 }

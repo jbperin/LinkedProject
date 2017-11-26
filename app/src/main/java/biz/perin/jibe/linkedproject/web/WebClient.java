@@ -17,6 +17,8 @@
  */
 package biz.perin.jibe.linkedproject.web;
 
+import android.util.Log;
+import biz.perin.jibe.linkedproject.MyHelper;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -133,7 +135,9 @@ public class WebClient implements IWebClient {
         }
         return (htmlContent);
     }
-
+    private final void setConnected (){
+        isConnected = true;
+    }
     @Override
     public String getFormWebPage(String pageAdress , List<String []> params) {
         String result = null;
@@ -195,8 +199,26 @@ public class WebClient implements IWebClient {
             post.setEntity(new UrlEncodedFormEntity(postFields, HTTP.UTF_8));
             response = httpclient.execute(post);
             HttpEntity entity = response.getEntity();
+            String htmlContent = EntityUtils.toString(entity);
             System.out.println("Login form get: " + response.getStatusLine());
-            isConnected = true;
+            System.out.println(htmlContent);
+
+            MyHelper.patternRunThrough(htmlContent
+                    , "<p class=\"alerte\">Bienvenue ([^<]*) Trois secondes de patience...</p>"
+                    , new MyHelper.EntryHandler() {
+                        @Override
+                        public void processEntry(String[] params) {
+//                        System.out.println ("Mesinfos : "
+//                                + "prenom" + params[0]
+//
+//                        );
+                            Log.d("prenom = " ,params[0]);
+                            setConnected();
+                        }
+                    });
+
+
+//            isConnected = true;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e) {

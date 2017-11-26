@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -71,13 +72,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        mSelClient = LetsClient.getInstance(this);
+        mSelClient = LetsClient.getInstance(this.getApplicationContext());
 
-        checkNetworkConnection();
+
 
         FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.content_main, webFragment);
         fragmentTransaction.commit();
+
+
 
 
     }
@@ -161,6 +164,9 @@ public class MainActivity extends AppCompatActivity
                 WebHelper.getInstance().setAuthenticationInformation(
                         UserPreferences.getString("login", "defaultlogin")
                         , UserPreferences.getString("password", "defaultpassword"));
+                Intent msgIntent = new Intent(this, SurferService.class);
+                msgIntent.putExtra("RessourceType","LOGIN");
+                startService(msgIntent);
             }
             return true;
 
@@ -228,32 +234,6 @@ public class MainActivity extends AppCompatActivity
     private void refreshView() {
         TextView tv = (TextView) findViewById(R.id.displayedText);
         tv.setText("To be defined");
-    }
-
-    /**
-     * Check whether the device is connected, and if so, whether the connection
-     * is wifi or mobile (it could be something else).
-     */
-    private void checkNetworkConnection() {
-        boolean wifiConnected;
-        boolean mobileConnected;
-        // BEGIN_INCLUDE(connect)
-        ConnectivityManager connMgr =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
-        if (activeInfo != null && activeInfo.isConnected()) {
-
-            wifiConnected = activeInfo.getType() == ConnectivityManager.TYPE_WIFI;
-            mobileConnected = activeInfo.getType() == ConnectivityManager.TYPE_MOBILE;
-            if(wifiConnected) {
-               // Log.i(TAG, getString(R.string.wifi_connection));
-            } else if (mobileConnected){
-                //Log.i(TAG, getString(R.string.mobile_connection));
-            }
-        } else {
-            //Log.i(TAG, getString(R.string.no_wifi_or_mobile));
-        }
-        // END_INCLUDE(connect)
     }
 
 

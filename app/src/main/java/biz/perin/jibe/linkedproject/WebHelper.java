@@ -1,5 +1,6 @@
 package biz.perin.jibe.linkedproject;
 
+import android.util.Log;
 import biz.perin.jibe.linkedproject.file.FileHelper;
 import biz.perin.jibe.linkedproject.model.*;
 import biz.perin.jibe.linkedproject.web.IWebClient;
@@ -50,15 +51,20 @@ public class WebHelper {
             System.out.println("WebClient must be provided use SetWebClient");
             //TODO throw execption
         }
-        try {
-            if (webClient.connect (LoginPageURL, this.login, this.password)){
-                authenticated = true;
+
+    }
+    public void connect() {
+        if ((this.login != null) && (this.password != null)) {
+            try {
+                Log.d(TAG, "Connect to server");
+                if (webClient.connect(LoginPageURL, this.login, this.password)) {
+                    authenticated = true;
+                }
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
             }
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
     }
-
     public void getPersonnalInfo(boolean onlinemode) {
 
         String htmlContent = null;
