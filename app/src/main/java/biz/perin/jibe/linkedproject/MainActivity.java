@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity
         ,AnnounceFragment.ListAnnounceDataProvider
 {
 
-    private final String TAG = "MainActivity";
+    private final String TAG = MainActivity.class.getName();
 
     NavigationView navigationView = null;
 
@@ -71,8 +71,12 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        mSelClient = LetsClient.getInstance(this.getApplicationContext());
+        if (mSelClient == null ) {
+            Log.d(TAG, "Retrieving new Instance of sel client");
+            mSelClient = LetsClient.getInstance(this.getApplicationContext());
+        } else {
+            Log.d(TAG, "Sel client already available");
+        }
 
 
 
@@ -187,14 +191,14 @@ public class MainActivity extends AppCompatActivity
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.i(TAG, "onRestoreInstanceState");
         String strModel = savedInstanceState.getString("model");
-        mSelClient.setModel(new Gson().fromJson(strModel, ModelInterface.class));
+        //mSelClient.setModel(new Gson().fromJson(strModel, ModelInterface.class));
     }
 
     // invoked when the activity may be temporarily destroyed, save the instance state here
     @Override
     public void onSaveInstanceState(Bundle outState) {
         Log.i(TAG, "onSaveInstanceState");
-        outState.putString("model", new Gson().toJson(mSelClient.getModel()).toString());
+        //outState.putString("model", new Gson().toJson(mSelClient.getModel()).toString());
         super.onSaveInstanceState(outState);
     }
 

@@ -17,6 +17,7 @@
  */
 package biz.perin.jibe.linkedproject;
 
+import android.util.Log;
 import biz.perin.jibe.linkedproject.file.FileHelper;
 import biz.perin.jibe.linkedproject.model.*;
 import com.google.gson.*;
@@ -29,12 +30,16 @@ import java.util.ArrayList;
  */
 public class ModelInterface implements IModelGUI, LetsObserver {
 
+    private final static String TAG = ModelInterface.class.getName();
+
     ArrayList<String> lAnn = new ArrayList<>();
     ArrayList<String> lPers = new ArrayList<>();
     ArrayList<String> lForum = new ArrayList<>();
     ArrayList<String> lTrans = new ArrayList<>();
     String personnalInfo = null;
     String account  = null;
+
+    private ILocalSystemExchange theSel = null;
 
     public void loadFromFile(String filename) {
         String SelJson = FileHelper.getInstance().readStringFromFile(filename);
@@ -84,6 +89,34 @@ public class ModelInterface implements IModelGUI, LetsObserver {
             // TODO deals with transactions of the account
         }
 
+    }
+
+    public ModelInterface(LocalSystemExchange theSel) {
+        Log.d(TAG, "Constructor");
+        this.theSel = theSel;
+
+        refreshFromModel();
+    }
+
+    private void refreshFromModel() {
+
+        Log.d(TAG, "refreshFromModel");
+        Gson gson = new Gson();
+
+        for (Announce ann : theSel.getListOfAnnounce()) {
+            lAnn.add(gson.toJson(ann));
+        }
+        for (Person pers : theSel.getListOfPerson()) {
+            lPers.add(gson.toJson(pers));
+        }
+        for (Forum forum: theSel.getListOfForum()) {
+            lForum.add(gson.toJson(forum));
+       }
+        for (Transaction trans: theSel.getListOfTransaction()) {
+            lTrans.add(gson.toJson(trans));
+        }
+        personnalInfo = gson.toJson(theSel.getPersonnalInfo());
+        account  = gson.toJson(theSel.getAccount());
     }
 
     @Override

@@ -56,14 +56,24 @@ public class SurferService extends IntentService{
             Intent localIntent =
                     new Intent("biz.perin.jibe.linkedproject.BROADCAST")
                             // Puts the status into the Intent
-                            .putExtra("biz.perin.jibe.linkedproject.STATUS", "Done");
+                            .putExtra(resType, "Downloaded");
             // Broadcasts the Intent to receivers in this app.
             LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
 
 
         } else if (resType.equals("LOGIN")) {
             Log.d(TAG, "Connecting ..");
-            WebHelper.getInstance().connect();
+            Intent localIntent =
+                    new Intent("biz.perin.jibe.linkedproject.BROADCAST");
+
+            if (WebHelper.getInstance().connect()) {
+                // Puts the status into the Intent
+                localIntent.putExtra(resType, "Logged");
+            } else {
+                localIntent.putExtra(resType, "Failed");
+            }
+            // Broadcasts the Intent to receivers in this app.
+            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
             Log.d(TAG, "End of connection");
 
         }

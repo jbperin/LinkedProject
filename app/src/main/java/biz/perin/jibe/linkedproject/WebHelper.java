@@ -53,8 +53,9 @@ public class WebHelper {
         }
 
     }
-    public void connect() {
+    public boolean connect() {
         if ((this.login != null) && (this.password != null)) {
+            authenticated = false;
             try {
                 Log.d(TAG, "Connect to server");
                 if (webClient.connect(LoginPageURL, this.login, this.password)) {
@@ -64,6 +65,7 @@ public class WebHelper {
                 e.printStackTrace();
             }
         }
+        return authenticated;
     }
     public void getPersonnalInfo(boolean onlinemode) {
 

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +20,7 @@ import android.widget.TextView;
  */
 public class LoginActivity extends AppCompatActivity {
 
+    private final static String TAG = LoginActivity.class.getName();
 
     // UI references.
     private EditText mUserPseudoView;
@@ -124,6 +126,7 @@ public class LoginActivity extends AppCompatActivity {
             WebHelper.getInstance().setAuthenticationInformation(
                     UserPreferences.getString("login", "defaultlogin")
                     , UserPreferences.getString("password", "defaultpassword"));
+            Log.d(TAG, "Start intent service for Login ");
             Intent msgIntent = new Intent(this, SurferService.class);
             msgIntent.putExtra("RessourceType","LOGIN");
             startService(msgIntent);

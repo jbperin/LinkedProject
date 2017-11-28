@@ -24,13 +24,14 @@ import static android.content.Context.MODE_PRIVATE;
 public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
 
     public static final String LETS_MODEL_JSON_FILENAME = "LetsModel.json";
-    private final String TAG = "LetsClient";
+    private static final String TAG = LetsClient.class.getName();
     private static LetsClient ourInstance = null;
 
     private DatabaseHelper dbHelper = null;
     private WebHelper webHelper = null;
     private LocalSystemExchange theSel = null;
-    boolean mBound = false;
+
+    //boolean mBound = false;
     private Context mContext;
 
     // Connectivity
@@ -44,6 +45,7 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
     public static LetsClient getInstance(Context context) {
 
         if (ourInstance == null) {
+            Log.d(TAG,"Instanciating LetsClient" );
             ourInstance = new LetsClient(context.getApplicationContext());
         }
         return ourInstance;
@@ -51,11 +53,15 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
     public static LetsClient getInstance() {
         return ourInstance;
     }
+
     @Override
     public List<String> getListAnnounce() {
         return mModel.getAnnounces();
     }
+
+
     private LetsClient(Context context) {
+
         mContext = context;
         dbHelper = DatabaseHelper.getInstance(context);
         webHelper = WebHelper.getInstance();
@@ -76,7 +82,7 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
         webHelper.setWebClient(aWebClient);
 
 
-        mModel = new ModelInterface();
+        mModel = new ModelInterface(theSel);
         theSel.attach(mModel);
         theSel.attach(dbHelper);
 
@@ -103,6 +109,8 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
            webHelper.setAuthenticationInformation(
                     UserPreferences.getString("login", "defaultlogin")
                     , UserPreferences.getString("password", "defaultpassword"));
+
+            Log.d(TAG,"Start intent service for login " );
             Intent msgIntent = new Intent(mContext, SurferService.class);
             msgIntent.putExtra("RessourceType","LOGIN");
             mContext.startService(msgIntent);
@@ -117,6 +125,7 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+
             Log.d(TAG, "DownloadStateReceiver.onReceive");
         }
     }

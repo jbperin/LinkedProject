@@ -59,6 +59,19 @@ public class LocalSystemExchange extends LetsObservable implements ILocalSystemE
     }
 
     @Override
+    public List<Transaction> getListOfTransaction() {
+        return listOfTransaction;
+    }
+
+    public PersonnalInfo getPersonnalInfo() {
+        return personnalInfo;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    @Override
     public void add(PersonnalInfo object) {
         // TODO rename in setPersonnalInfo
         personnalInfo = object;

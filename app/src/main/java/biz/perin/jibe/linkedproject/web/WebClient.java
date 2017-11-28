@@ -201,7 +201,7 @@ public class WebClient implements IWebClient {
             HttpEntity entity = response.getEntity();
             String htmlContent = EntityUtils.toString(entity);
             System.out.println("Login form get: " + response.getStatusLine());
-            System.out.println(htmlContent);
+            //System.out.println(htmlContent);
 
             MyHelper.patternRunThrough(htmlContent
                     , "<p class=\"alerte\">Bienvenue ([^<]*) Trois secondes de patience...</p>"
@@ -212,7 +212,7 @@ public class WebClient implements IWebClient {
 //                                + "prenom" + params[0]
 //
 //                        );
-                            Log.d("prenom = " ,params[0]);
+                            //Log.d("prenom = " ,params[0]);
                             setConnected();
                         }
                     });

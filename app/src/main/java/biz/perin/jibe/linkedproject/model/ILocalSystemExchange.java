@@ -31,6 +31,9 @@ public interface ILocalSystemExchange {
     public List<Person> getListOfPerson();
     public List<Announce> getListOfAnnounce();
     public List<Forum> getListOfForum();
+    public List<Transaction> getListOfTransaction();
+    public PersonnalInfo getPersonnalInfo();
+    public Account getAccount();
 
     public void add(PersonnalInfo object);
     public void add(Account object);
