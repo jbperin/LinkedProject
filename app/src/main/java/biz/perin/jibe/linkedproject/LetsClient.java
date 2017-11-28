@@ -3,7 +3,6 @@ package biz.perin.jibe.linkedproject;
 import android.content.*;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import biz.perin.jibe.linkedproject.database.DatabaseHelper;
@@ -17,6 +16,7 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static biz.perin.jibe.linkedproject.Constants.*;
 
 /**
  * Created by Jean-Baptiste PERIN on 18/11/2017.
@@ -25,6 +25,7 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
 
     public static final String LETS_MODEL_JSON_FILENAME = "LetsModel.json";
     private static final String TAG = LetsClient.class.getName();
+
     private static LetsClient ourInstance = null;
 
     private DatabaseHelper dbHelper = null;
@@ -87,20 +88,23 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
         theSel.attach(dbHelper);
 
 
-        IntentFilter statusIntentFilter = new IntentFilter("biz.perin.jibe.linkedproject.BROADCAST");
+        IntentFilter webPartVisited = new IntentFilter(WEB_PART_VISITED);
+        IntentFilter webLogin = new IntentFilter(WEB_LOGIN);
         // Instantiates a new DownloadStateReceiver
         DownloadStateReceiver mDownloadStateReceiver = new DownloadStateReceiver();
         // Registers the DownloadStateReceiver and its intent filters
         LocalBroadcastManager.getInstance(mContext).registerReceiver(
                 mDownloadStateReceiver,
-                statusIntentFilter);
-
+                webPartVisited);
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(
+                mDownloadStateReceiver,
+                webLogin);
 
 
         checkNetworkConnection();
 
         Intent downloadAnnonIntent = new Intent(mContext, SurferService.class);
-        downloadAnnonIntent.putExtra("RessourceType","ANNONYMUS_ANNOUNCE");
+        downloadAnnonIntent.putExtra("RessourceType", ANONYMOUS_ANNOUNCE);
         mContext.startService(downloadAnnonIntent);
 
         //bindToDownloaderService();
@@ -112,11 +116,35 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
 
             Log.d(TAG,"Start intent service for login " );
             Intent msgIntent = new Intent(mContext, SurferService.class);
-            msgIntent.putExtra("RessourceType","LOGIN");
+            msgIntent.putExtra("RessourceType",LOGIN);
             mContext.startService(msgIntent);
         }
 
 
+
+    }
+
+    private void downloadData() {
+        Intent downloadAnnuaireIntent = new Intent(mContext, SurferService.class);
+        downloadAnnuaireIntent.putExtra("RessourceType", ANNUAIRE);
+        mContext.startService(downloadAnnuaireIntent);
+
+        Intent downloadAnnounceIntent = new Intent(mContext, SurferService.class);
+        downloadAnnounceIntent.putExtra("RessourceType", ANNOUNCES);
+        mContext.startService(downloadAnnounceIntent);
+
+
+        Intent downloadForumIntent = new Intent(mContext, SurferService.class);
+        downloadForumIntent.putExtra("RessourceType", FORUMS);
+        mContext.startService(downloadForumIntent);
+
+        Intent downloadPersonnalIntent = new Intent(mContext, SurferService.class);
+        downloadPersonnalIntent.putExtra("RessourceType", PERSONNAL_INFO);
+        mContext.startService(downloadPersonnalIntent);
+
+        Intent downloadAccountIntent = new Intent(mContext, SurferService.class);
+        downloadAccountIntent.putExtra("RessourceType", ACCOUNT_INFO);
+        mContext.startService(downloadAccountIntent);
 
     }
     private class DownloadStateReceiver extends BroadcastReceiver {
@@ -127,6 +155,29 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
         public void onReceive(Context context, Intent intent) {
 
             Log.d(TAG, "DownloadStateReceiver.onReceive");
+            if (intent.getAction().equals(WEB_LOGIN)){
+                if (intent.getStringExtra("result").equals("Logged")) {
+                    Log.d(TAG, "Successfully logged in !");
+                    downloadData();
+
+                } else {
+                    Log.d(TAG, "Failed to log in !");
+                }
+            }else if (intent.getAction().equals(WEB_PART_VISITED)){
+                if (intent.getStringExtra("resType").equals(ANONYMOUS_ANNOUNCE)){
+                    Log.d(TAG, "Annon announces retrieved ");
+                } else if (intent.getStringExtra("resType").equals(ANNUAIRE)){
+                    Log.d(TAG, "Annuaire retrieved ");
+                } else if (intent.getStringExtra("resType").equals(ANNOUNCES)){
+                    Log.d(TAG, "Announces retrieved ");
+                } else if (intent.getStringExtra("resType").equals(FORUMS)){
+                    Log.d(TAG, "Forums retrieved ");
+                } else if (intent.getStringExtra("resType").equals(PERSONNAL_INFO)){
+                    Log.d(TAG, "Personnal infos retrieved ");
+                } else if (intent.getStringExtra("resType").equals(ACCOUNT_INFO)){
+                    Log.d(TAG, "Account infos retrieved ");
+                }
+            }
         }
     }
     /**

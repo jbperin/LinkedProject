@@ -19,14 +19,17 @@ package biz.perin.jibe.linkedproject;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+
+import static biz.perin.jibe.linkedproject.Constants.*;
 
 /**
  * Created by Jean-Baptiste PERIN on 25/11/2017.
  */
 public class SurferService extends IntentService{
+
+
 
     private final String TAG = SurferService.class.getName();
 
@@ -44,38 +47,68 @@ public class SurferService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
+        Intent localIntent = null;
         String resType = intent.getStringExtra("RessourceType");
 
-        if (resType.equals("ANNONYMUS_ANNOUNCE")){
+        if (resType.equals(ANONYMOUS_ANNOUNCE)){
             //sLog.d(TAG, "Anonymous announce were downloaded.");
             Log.d(TAG, "Start thread downloading anonymous announce ..");
             WebHelper.getInstance().getAnonymousAnnounces(true);
-            Log.d(TAG, "Anonymous announce were downloaded.");
 
-            Intent localIntent =
-                    new Intent("biz.perin.jibe.linkedproject.BROADCAST")
-                            // Puts the status into the Intent
-                            .putExtra(resType, "Downloaded");
-            // Broadcasts the Intent to receivers in this app.
-            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+            localIntent =
+                    new Intent(WEB_PART_VISITED)
+                            .putExtra("resType", resType);
 
 
-        } else if (resType.equals("LOGIN")) {
+
+        } else if (resType.equals(LOGIN)) {
             Log.d(TAG, "Connecting ..");
-            Intent localIntent =
-                    new Intent("biz.perin.jibe.linkedproject.BROADCAST");
+            localIntent =
+                    new Intent(WEB_LOGIN);
 
             if (WebHelper.getInstance().connect()) {
                 // Puts the status into the Intent
-                localIntent.putExtra(resType, "Logged");
+                localIntent.putExtra("result", "Logged");
             } else {
-                localIntent.putExtra(resType, "Failed");
+                localIntent.putExtra("result", "Failed");
             }
-            // Broadcasts the Intent to receivers in this app.
-            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
-            Log.d(TAG, "End of connection");
 
+        }else if (resType.equals(ANNOUNCES)) {
+                Log.d(TAG, "Start thread downloading announces ..");
+                WebHelper.getInstance().getAnnuaire(true);
+                localIntent =
+                        new Intent(WEB_PART_VISITED)
+                                .putExtra("resType", resType);
+
+
+
+        } else if (resType.equals(ANNUAIRE)) {
+            Log.d(TAG, "Start thread downloading annuaire ..");
+            WebHelper.getInstance().getAnnuaire(true);
+            localIntent =
+                    new Intent(WEB_PART_VISITED)
+                            .putExtra("resType", resType);
+
+        } else if (resType.equals(FORUMS)) {
+            Log.d(TAG, "Start thread downloading forums ..");
+            WebHelper.getInstance().getForums(true);
+            localIntent =
+                    new Intent(WEB_PART_VISITED)
+                            .putExtra("resType", resType);
+        } else if (resType.equals(PERSONNAL_INFO)) {
+            Log.d(TAG, "Start thread downloading personnal infos ..");
+            WebHelper.getInstance().getPersonnalInfo(true);
+            localIntent =
+                    new Intent(WEB_PART_VISITED)
+                            .putExtra("resType", resType);
+        } else if (resType.equals(ACCOUNT_INFO)) {
+            Log.d(TAG, "Start thread downloading account infos ..");
+            WebHelper.getInstance().getAccountInfo(true);
+            localIntent =
+                    new Intent(WEB_PART_VISITED)
+                            .putExtra("resType", resType);
         }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+
     }
 }
