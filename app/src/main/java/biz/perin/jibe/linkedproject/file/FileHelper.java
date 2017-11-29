@@ -88,7 +88,7 @@ public class FileHelper implements IFiler{
 
     @Override
     public boolean fileExists(String filename) {
-        File file = new File(filename);
+        File file = new File(context.getFilesDir(), filename);
         return(file.exists());
 
     }

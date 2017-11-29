@@ -7,7 +7,7 @@ import java.util.List;
  * Created by tbpk7658 on 15/11/2017.
  */
 public class LetsObservable {
-    List<LetsObserver> listOfObservers = new ArrayList <> ();
+    private transient List<LetsObserver> listOfObservers = new ArrayList <> ();
 
     public void attach(LetsObserver anObserver) {
         listOfObservers.add(anObserver);

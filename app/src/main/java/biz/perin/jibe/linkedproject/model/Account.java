@@ -23,6 +23,13 @@ import java.util.List;
  * Created by Jean-Baptiste PERIN on 03/11/2017.
  */
 public class Account {
+    private Integer nbEchange = null;
+    private Integer solde = null;
+    private Integer soldeActuel = null;
+    private String derniere_publication = null;
+
+    public Account() {
+    }
     public void setNbEchange(Integer nbEchange) {
         this.nbEchange = nbEchange;
     }
@@ -35,15 +42,6 @@ public class Account {
         this.soldeActuel = soldeActuel;
     }
 
-    private Integer nbEchange = null;
-    private Integer solde = null;
-    private Integer soldeActuel = null;
-    private String derniere_publication = null;
-
-    List<Transaction> listOfTransaction = null;
-
-    public Account() {
-    }
 
     public Integer getNbEchange() {
         return nbEchange;

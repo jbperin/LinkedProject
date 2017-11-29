@@ -98,7 +98,7 @@ public class ModelInterface implements IModelGUI, LetsObserver {
         refreshFromModel();
     }
 
-    private void refreshFromModel() {
+    public  void refreshFromModel() {
 
         Log.d(TAG, "refreshFromModel");
         Gson gson = new Gson();

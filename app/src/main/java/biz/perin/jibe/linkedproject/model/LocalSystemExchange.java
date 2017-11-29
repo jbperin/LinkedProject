@@ -29,9 +29,8 @@ public class LocalSystemExchange extends LetsObservable implements ILocalSystemE
     private final List<Announce> listOfAnnounce = new ArrayList<>();
     private final List<Forum> listOfForum = new ArrayList<>();
     private final List<Transaction> listOfTransaction = new ArrayList<>();
-    private Forum tabOfForum[] = new Forum[Forum.forum_category.values().length];
-    private PersonnalInfo personnalInfo = null;
-    private Account account = null;
+    private PersonnalInfo personnalInfo = new PersonnalInfo();
+    private Account account = new Account();
 
     public LocalSystemExchange() {
         for (Forum.forum_category forcat : Forum.forum_category.values()) {
@@ -39,7 +38,7 @@ public class LocalSystemExchange extends LetsObservable implements ILocalSystemE
             nForum.setRubrique(forcat);
 
             listOfForum.add(nForum);
-            tabOfForum[forcat.ordinal()] = nForum;
+
         }
     }
 
@@ -130,9 +129,17 @@ public class LocalSystemExchange extends LetsObservable implements ILocalSystemE
     @Override
     public Discussion add(Discussion dis, Forum.forum_category forum_cat) {
 
-        Forum theForum = tabOfForum[forum_cat.ordinal()];
+        Forum theForum = null;
+
+        for (Forum forum : listOfForum)
+            if (forum.getRubrique() == forum_cat) {
+                theForum = forum;
+                break;
+            }
+
         if (theForum == null) {
-            System.out.println("");
+            System.out.println(" !!!! Unable to find requested Forum !!!!");
+            return (null);
         }
         for (Discussion discussion : theForum.getListOfDiscussion()) {
             if (discussion.getId() == dis.getId()) {
@@ -148,7 +155,13 @@ public class LocalSystemExchange extends LetsObservable implements ILocalSystemE
     @Override
     public ForumMessage add(ForumMessage mess) {
         Discussion disc = null;
-        Forum theForum = tabOfForum[mess.getCategory().ordinal()];
+        Forum theForum = null;
+
+        for (Forum forum : listOfForum)
+            if (forum.getRubrique() == mess.getCategory()) {
+                theForum = forum;
+                break;
+            }
         for (Discussion discussion : theForum.getListOfDiscussion()) {
             if (discussion.getId() == mess.getDiscussionId()) {
                 disc = discussion;

@@ -36,8 +36,8 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
     private Context mContext;
 
     // Connectivity
-    boolean wifiConnected;
-    boolean mobileConnected;
+    boolean wifiConnected = false;
+    boolean mobileConnected = false;
 
     private ModelInterface mModel;
 
@@ -60,7 +60,10 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
         return mModel.getAnnounces();
     }
 
-
+    private boolean downloadAllowed() {
+        // TODO take into account user settings to know if it is allowed to download on mobile data network
+        return (wifiConnected || mobileConnected);
+    }
     private LetsClient(Context context) {
 
         mContext = context;
@@ -103,9 +106,10 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
 
         checkNetworkConnection();
 
-        Intent downloadAnnonIntent = new Intent(mContext, SurferService.class);
-        downloadAnnonIntent.putExtra("RessourceType", ANONYMOUS_ANNOUNCE);
-        mContext.startService(downloadAnnonIntent);
+        if (downloadAllowed() && theSel.getListOfAnnounce().size() == 0) {
+            Log.d(TAG,"No announce available .. download some");
+            triggerDownload(ANONYMOUS_ANNOUNCE);
+        }
 
         //bindToDownloaderService();
         SharedPreferences UserPreferences = mContext.getSharedPreferences  ("UserPreferences", MODE_PRIVATE );
@@ -124,27 +128,38 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
 
     }
 
+    private void triggerDownload(String resourceType) {
+        Intent downloadAnnonIntent = new Intent(mContext, SurferService.class);
+        downloadAnnonIntent.putExtra("RessourceType", resourceType);
+        mContext.startService(downloadAnnonIntent);
+    }
+
     private void downloadData() {
-        Intent downloadAnnuaireIntent = new Intent(mContext, SurferService.class);
-        downloadAnnuaireIntent.putExtra("RessourceType", ANNUAIRE);
-        mContext.startService(downloadAnnuaireIntent);
 
-        Intent downloadAnnounceIntent = new Intent(mContext, SurferService.class);
-        downloadAnnounceIntent.putExtra("RessourceType", ANNOUNCES);
-        mContext.startService(downloadAnnounceIntent);
+//        Intent downloadPersonnalIntent = new Intent(mContext, SurferService.class);
+//        downloadPersonnalIntent.putExtra("RessourceType", PERSONNAL_INFO);
+//        mContext.startService(downloadPersonnalIntent);
+        triggerDownload(PERSONNAL_INFO);
 
+//        Intent downloadAccountIntent = new Intent(mContext, SurferService.class);
+//        downloadAccountIntent.putExtra("RessourceType", ACCOUNT_INFO);
+//        mContext.startService(downloadAccountIntent);
+        triggerDownload(ACCOUNT_INFO);
 
-        Intent downloadForumIntent = new Intent(mContext, SurferService.class);
-        downloadForumIntent.putExtra("RessourceType", FORUMS);
-        mContext.startService(downloadForumIntent);
+//        Intent downloadAnnuaireIntent = new Intent(mContext, SurferService.class);
+//        downloadAnnuaireIntent.putExtra("RessourceType", ANNUAIRE);
+//        mContext.startService(downloadAnnuaireIntent);
+        triggerDownload(ANNUAIRE);
 
-        Intent downloadPersonnalIntent = new Intent(mContext, SurferService.class);
-        downloadPersonnalIntent.putExtra("RessourceType", PERSONNAL_INFO);
-        mContext.startService(downloadPersonnalIntent);
+//        Intent downloadAnnounceIntent = new Intent(mContext, SurferService.class);
+//        downloadAnnounceIntent.putExtra("RessourceType", ANNOUNCES);
+//        mContext.startService(downloadAnnounceIntent);
+        triggerDownload(ANNOUNCES);
 
-        Intent downloadAccountIntent = new Intent(mContext, SurferService.class);
-        downloadAccountIntent.putExtra("RessourceType", ACCOUNT_INFO);
-        mContext.startService(downloadAccountIntent);
+//        Intent downloadForumIntent = new Intent(mContext, SurferService.class);
+//        downloadForumIntent.putExtra("RessourceType", FORUMS);
+//        mContext.startService(downloadForumIntent);
+        triggerDownload(FORUMS);
 
     }
     private class DownloadStateReceiver extends BroadcastReceiver {
@@ -165,7 +180,8 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
                 }
             }else if (intent.getAction().equals(WEB_PART_VISITED)){
                 if (intent.getStringExtra("resType").equals(ANONYMOUS_ANNOUNCE)){
-                    Log.d(TAG, "Annon announces retrieved ");
+                    Log.d(TAG, "Annon announces retrieved :" + theSel.getListOfAnnounce().size() + " announces");
+                    //theSel = new Gson().fromJson(FileHelper.getInstance().readStringFromFile(LETS_MODEL_JSON_FILENAME), LocalSystemExchange.class);
                 } else if (intent.getStringExtra("resType").equals(ANNUAIRE)){
                     Log.d(TAG, "Annuaire retrieved ");
                 } else if (intent.getStringExtra("resType").equals(ANNOUNCES)){
@@ -177,6 +193,8 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
                 } else if (intent.getStringExtra("resType").equals(ACCOUNT_INFO)){
                     Log.d(TAG, "Account infos retrieved ");
                 }
+                FileHelper.getInstance().writeStringToFile(new Gson().toJson(theSel), LETS_MODEL_JSON_FILENAME);
+                mModel.refreshFromModel();
             }
         }
     }

@@ -185,9 +185,21 @@ public class DatabaseHelper extends SQLiteOpenHelper implements LetsObserver{
         Integer numberOfExchange = pers.getNumberOfExchange();
         String lastPublish = "'" + pers.getLastPublish()+"'";
 
-        String SqlRequest = String.format("INSERT INTO Persons VALUES(%s, %d, %s, %s, %s, %s, %d, %s);",pseudo, solde, address, name, phone1, phone2, numberOfExchange,lastPublish);
+        ContentValues values = new ContentValues();
+        //values.put("ID", Id);
+        values.put("pseudo",pseudo);
+        values.put("name", name);
+        values.put("address", address);
+        values.put("phone1", phone1);
+        values.put("phone2", phone2);
+        values.put("solde", solde);
+        values.put("numberOfExchange", numberOfExchange);
+        values.put("lastPublish", lastPublish);
 
-        mydatabase.execSQL(SqlRequest);
+
+        //String SqlRequest = String.format("INSERT INTO Persons VALUES(%s, %d, %s, %s, %s, %s, %d, %s);",pseudo, solde, address, name, phone1, phone2, numberOfExchange,lastPublish);
+        // mydatabase.execSQL(SqlRequest);
+        int returnCode = (int) mydatabase.insert("Persons", null, values);
 
     }
 
@@ -206,10 +218,21 @@ public class DatabaseHelper extends SQLiteOpenHelper implements LetsObserver{
 
         SQLiteDatabase mydatabase = this.getWritableDatabase();
 
-        String SqlRequest = String.format("INSERT INTO Posts VALUES(%s, %d, %s, %s, %s);",pseudo, discussionId, text, date, category);
 
-        mydatabase.execSQL(SqlRequest);
+        ContentValues values = new ContentValues();
+        //values.put("ID", Id);
+        values.put("pseudo",pseudo);
+        values.put("discussionId", discussionId);
+        values.put("text", text);
+        values.put("date", date);
+        values.put("category", category);
 
+//        String SqlRequest = String.format("INSERT INTO Posts VALUES(%s, %d, %s, %s, %s);",pseudo, discussionId, text, date, category);
+//
+//        mydatabase.execSQL(SqlRequest);
+
+
+        int returnCode = (int) mydatabase.insert("Posts", null, values);
     }
 
 
@@ -228,9 +251,21 @@ public class DatabaseHelper extends SQLiteOpenHelper implements LetsObserver{
 
         SQLiteDatabase mydatabase = this.getWritableDatabase();
 
-        String SqlRequest = String.format("INSERT INTO Transactions VALUES(%s, %s, %s, %s, %d);",pseudoOfferer, pseudoDemander, offerDescription, demandDescription, amount);
+//        String SqlRequest = String.format("INSERT INTO Transactions VALUES(%s, %s, %s, %s, %d);",pseudoOfferer, pseudoDemander, offerDescription, demandDescription, amount);
+//
+//        mydatabase.execSQL(SqlRequest);
 
-        mydatabase.execSQL(SqlRequest);
+
+        ContentValues values = new ContentValues();
+        //values.put("ID", Id);
+        values.put("pseudoOfferer",pseudoOfferer);
+        values.put("pseudoDemander", pseudoDemander);
+        values.put("offerDescription", offerDescription);
+        values.put("demandDescription", demandDescription);
+        values.put("amount", amount);
+
+
+        int returnCode = (int) mydatabase.insert("Transactions", null, values);
     }
 }
 

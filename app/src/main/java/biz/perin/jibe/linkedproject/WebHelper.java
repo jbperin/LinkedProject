@@ -91,8 +91,6 @@ public class WebHelper {
 //                        );
                         dictPersonalInfo.put("email", params[0] );
 
-
-
                     }
                 });
         // Vocable
