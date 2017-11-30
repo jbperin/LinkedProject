@@ -26,4 +26,6 @@ public interface IModelGUI {
     public ArrayList<String> getAnnounces();
     public ArrayList<String> getAnnuaire();
     public ArrayList<String> getForums();
+    public String getPersonnalInfo();
+    public String getAccount();
 }

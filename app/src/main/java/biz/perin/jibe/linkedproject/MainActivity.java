@@ -1,13 +1,10 @@
 package biz.perin.jibe.linkedproject;
 
 import android.content.*;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -79,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         TextView tvDisplay = (TextView) findViewById(R.id.displayedText);
-        tvDisplay.setText("Il y a "+mSelClient.getModel().getAnnounces().size() + " annonces");
+        tvDisplay.setText("Il y a "+mSelClient.getModel().getAnnonymousAnnounces().size() + " annonces");
 
         FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.content_main, webFragment);
@@ -179,7 +175,7 @@ public class MainActivity extends AppCompatActivity
 
             //refreshView();
             TextView tvDisplay = (TextView) findViewById(R.id.displayedText);
-            tvDisplay.setText("Il y a "+mSelClient.getModel().getAnnounces().size() + " annonces");
+            tvDisplay.setText("Il y a "+mSelClient.getModel().getAnnonymousAnnounces().size() + " annonces");
             return true;
         }
 
@@ -246,6 +242,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public List<String> getListAnnounce() {
-        return mSelClient.getModel().getAnnounces();
+        return mSelClient.getModel().getAnnonymousAnnounces();
     }
 }

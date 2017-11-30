@@ -57,7 +57,7 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
 
     @Override
     public List<String> getListAnnounce() {
-        return mModel.getAnnounces();
+        return mModel.getAnnonymousAnnounces();
     }
 
     private boolean downloadAllowed() {
@@ -106,7 +106,7 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
 
         checkNetworkConnection();
 
-        if (downloadAllowed() && theSel.getListOfAnnounce().size() == 0) {
+        if (downloadAllowed() && mModel.getAnnonymousAnnounces().size() == 0) {
             Log.d(TAG,"No announce available .. download some");
             triggerDownload(ANONYMOUS_ANNOUNCE);
         }
@@ -136,22 +136,24 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
 
     private void downloadData() {
         if (downloadAllowed()) {
-            if (theSel.getPersonnalInfo() == null) {
+            if (mModel.getPersonnalInfo() == null) {
                 triggerDownload(PERSONNAL_INFO);
             }
 
-            if (theSel.getAccount() == null) {
+            if (mModel.getAccount() == null) {
                 triggerDownload(ACCOUNT_INFO);
             }
 
-            triggerDownload(ANNOUNCES);
+            if (mModel.getAnnounces().size() == 0) {
+                triggerDownload(ANNOUNCES);
+            }
 
 
-            if (theSel.getListOfPerson().size() != 0) {
+            if (mModel.getAnnuaire().size() == 0) {
                 triggerDownload(ANNUAIRE);
             }
 
-            if (theSel.getListOfForum().size() != 0) {
+            if (mModel.getForums().size() == 0) {
                 triggerDownload(FORUMS);
             }
         }
@@ -223,7 +225,7 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
 
     //        WebHelper.getInstance().getAnonymousAnnounces(false);
 //        WebHelper.getInstance().setAuthenticationInformation(userLogin, userPassword);
-//        WebHelper.getInstance().getAnnounces(false);
+//        WebHelper.getInstance().getAnnonymousAnnounces(false);
 //        WebHelper.getInstance().getAnnuaire(false);
 //        WebHelper.getInstance().getAccountInfo (false);
 //        WebHelper.getInstance().getPersonnalInfo(false);

@@ -37,6 +37,7 @@ public class ModelInterface implements IModelGUI, LetsObserver {
     private final static String TAG = ModelInterface.class.getName();
 
     ArrayList<String> lAnn = new ArrayList<>();
+    ArrayList<String> lAnnAnn = new ArrayList<>();
     ArrayList<String> lPers = new ArrayList<>();
     ArrayList<String> lForum = new ArrayList<>();
     ArrayList<String> lTrans = new ArrayList<>();
@@ -96,7 +97,7 @@ public class ModelInterface implements IModelGUI, LetsObserver {
     }
 
     public ModelInterface(LocalSystemExchange theSel) {
-        Log.d(TAG, "Constructor");
+
         this.theSel = theSel;
 
         refreshFromModel();
@@ -112,16 +113,20 @@ public class ModelInterface implements IModelGUI, LetsObserver {
     }
     public  void refreshFromModel(String resourceType) {
 
-        Log.d(TAG, "refreshFromModel");
+
         Gson gson = new Gson();
 
 
         if (resourceType.equals(ANONYMOUS_ANNOUNCE)){
             Log.d(TAG, "Annon announces retrieved :" + theSel.getListOfAnnounce().size() + " announces");
             //theSel = new Gson().fromJson(FileHelper.getInstance().readStringFromFile(LETS_MODEL_JSON_FILENAME), LocalSystemExchange.class);
-            lAnn.clear();
+            lAnnAnn.clear();
             for (Announce ann : theSel.getListOfAnnounce()) {
-                lAnn.add(gson.toJson(ann));
+                if (ann.getOwnerPseudo() == null || ann.getOwnerPseudo().equals("")){
+                    lAnnAnn.add(gson.toJson(ann));
+                } else {
+                    lAnn.add(gson.toJson(ann));
+                }
             }
         } else if (resourceType.equals(ANNUAIRE)){
             Log.d(TAG, "Annuaire retrieved ");
@@ -158,17 +163,21 @@ public class ModelInterface implements IModelGUI, LetsObserver {
 
     }
 
-    @Override
-    public ArrayList<String> getAnnounces() {
+    public ArrayList<String> getAnnonymousAnnounces() {
 
 
-        return (lAnn);
+        return (lAnnAnn);
 
     }
 
     @Override
-    public ArrayList<String> getAnnuaire() {
+    public ArrayList<String> getAnnounces() {
         return lAnn;
+    }
+
+    @Override
+    public ArrayList<String> getAnnuaire() {
+        return lPers;
     }
 
     @Override
@@ -178,7 +187,11 @@ public class ModelInterface implements IModelGUI, LetsObserver {
 
     @Override
     public void onNewAnnounce(Announce ann) {
-        lAnn.add(new Gson().toJson(ann).toString());
+        if (ann.getOwnerPseudo() == null || ann.getOwnerPseudo().trim().equals("")){
+            lAnnAnn.add(new Gson().toJson(ann).toString());
+        }else {
+            lAnn.add(new Gson().toJson(ann).toString());
+        }
     }
 
     @Override
@@ -195,5 +208,15 @@ public class ModelInterface implements IModelGUI, LetsObserver {
     @Override
     public void onNewTransaction(Transaction trans) {
         lTrans.add(new Gson().toJson(trans).toString());
+    }
+
+    @Override
+    public String getPersonnalInfo() {
+        return personnalInfo;
+    }
+
+    @Override
+    public String getAccount() {
+        return account;
     }
 }
