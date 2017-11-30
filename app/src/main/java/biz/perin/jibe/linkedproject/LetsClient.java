@@ -135,32 +135,26 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
     }
 
     private void downloadData() {
+        if (downloadAllowed()) {
+            if (theSel.getPersonnalInfo() == null) {
+                triggerDownload(PERSONNAL_INFO);
+            }
 
-//        Intent downloadPersonnalIntent = new Intent(mContext, SurferService.class);
-//        downloadPersonnalIntent.putExtra("RessourceType", PERSONNAL_INFO);
-//        mContext.startService(downloadPersonnalIntent);
-        triggerDownload(PERSONNAL_INFO);
+            if (theSel.getAccount() == null) {
+                triggerDownload(ACCOUNT_INFO);
+            }
 
-//        Intent downloadAccountIntent = new Intent(mContext, SurferService.class);
-//        downloadAccountIntent.putExtra("RessourceType", ACCOUNT_INFO);
-//        mContext.startService(downloadAccountIntent);
-        triggerDownload(ACCOUNT_INFO);
+            triggerDownload(ANNOUNCES);
 
-//        Intent downloadAnnuaireIntent = new Intent(mContext, SurferService.class);
-//        downloadAnnuaireIntent.putExtra("RessourceType", ANNUAIRE);
-//        mContext.startService(downloadAnnuaireIntent);
-        triggerDownload(ANNUAIRE);
 
-//        Intent downloadAnnounceIntent = new Intent(mContext, SurferService.class);
-//        downloadAnnounceIntent.putExtra("RessourceType", ANNOUNCES);
-//        mContext.startService(downloadAnnounceIntent);
-        triggerDownload(ANNOUNCES);
+            if (theSel.getListOfPerson().size() != 0) {
+                triggerDownload(ANNUAIRE);
+            }
 
-//        Intent downloadForumIntent = new Intent(mContext, SurferService.class);
-//        downloadForumIntent.putExtra("RessourceType", FORUMS);
-//        mContext.startService(downloadForumIntent);
-        triggerDownload(FORUMS);
-
+            if (theSel.getListOfForum().size() != 0) {
+                triggerDownload(FORUMS);
+            }
+        }
     }
     private class DownloadStateReceiver extends BroadcastReceiver {
         private DownloadStateReceiver() {
@@ -169,7 +163,7 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Log.d(TAG, "DownloadStateReceiver.onReceive");
+            //Log.d(TAG, "DownloadStateReceiver.onReceive");
             if (intent.getAction().equals(WEB_LOGIN)){
                 if (intent.getStringExtra("result").equals("Logged")) {
                     Log.d(TAG, "Successfully logged in !");
@@ -179,22 +173,9 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
                     Log.d(TAG, "Failed to log in !");
                 }
             }else if (intent.getAction().equals(WEB_PART_VISITED)){
-                if (intent.getStringExtra("resType").equals(ANONYMOUS_ANNOUNCE)){
-                    Log.d(TAG, "Annon announces retrieved :" + theSel.getListOfAnnounce().size() + " announces");
-                    //theSel = new Gson().fromJson(FileHelper.getInstance().readStringFromFile(LETS_MODEL_JSON_FILENAME), LocalSystemExchange.class);
-                } else if (intent.getStringExtra("resType").equals(ANNUAIRE)){
-                    Log.d(TAG, "Annuaire retrieved ");
-                } else if (intent.getStringExtra("resType").equals(ANNOUNCES)){
-                    Log.d(TAG, "Announces retrieved ");
-                } else if (intent.getStringExtra("resType").equals(FORUMS)){
-                    Log.d(TAG, "Forums retrieved ");
-                } else if (intent.getStringExtra("resType").equals(PERSONNAL_INFO)){
-                    Log.d(TAG, "Personnal infos retrieved ");
-                } else if (intent.getStringExtra("resType").equals(ACCOUNT_INFO)){
-                    Log.d(TAG, "Account infos retrieved ");
-                }
+
                 FileHelper.getInstance().writeStringToFile(new Gson().toJson(theSel), LETS_MODEL_JSON_FILENAME);
-                mModel.refreshFromModel();
+                mModel.refreshFromModel(intent.getStringExtra("resType"));
             }
         }
     }

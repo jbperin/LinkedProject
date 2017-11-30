@@ -24,6 +24,10 @@ import com.google.gson.*;
 
 import java.util.ArrayList;
 
+import static biz.perin.jibe.linkedproject.Constants.*;
+import static biz.perin.jibe.linkedproject.Constants.ACCOUNT_INFO;
+import static biz.perin.jibe.linkedproject.Constants.PERSONNAL_INFO;
+
 
 /**
  * Created by Jean-Baptiste PERIN on 12/11/2017.
@@ -98,25 +102,60 @@ public class ModelInterface implements IModelGUI, LetsObserver {
         refreshFromModel();
     }
 
-    public  void refreshFromModel() {
+    public  void refreshFromModel(){
+        refreshFromModel(ANONYMOUS_ANNOUNCE);
+        refreshFromModel(ANNUAIRE);
+        refreshFromModel(ANNOUNCES);
+        refreshFromModel(FORUMS);
+        refreshFromModel(PERSONNAL_INFO);
+        refreshFromModel(ACCOUNT_INFO);
+    }
+    public  void refreshFromModel(String resourceType) {
 
         Log.d(TAG, "refreshFromModel");
         Gson gson = new Gson();
 
-        for (Announce ann : theSel.getListOfAnnounce()) {
-            lAnn.add(gson.toJson(ann));
+
+        if (resourceType.equals(ANONYMOUS_ANNOUNCE)){
+            Log.d(TAG, "Annon announces retrieved :" + theSel.getListOfAnnounce().size() + " announces");
+            //theSel = new Gson().fromJson(FileHelper.getInstance().readStringFromFile(LETS_MODEL_JSON_FILENAME), LocalSystemExchange.class);
+            lAnn.clear();
+            for (Announce ann : theSel.getListOfAnnounce()) {
+                lAnn.add(gson.toJson(ann));
+            }
+        } else if (resourceType.equals(ANNUAIRE)){
+            Log.d(TAG, "Annuaire retrieved ");
+            lPers.clear();
+            for (Person pers : theSel.getListOfPerson()) {
+                lPers.add(gson.toJson(pers));
+            }
+        } else if (resourceType.equals(ANNOUNCES)){
+
+            Log.d(TAG, "Announces retrieved ");
+            lAnn.clear();
+            for (Announce ann : theSel.getListOfAnnounce()) {
+                lAnn.add(gson.toJson(ann));
+            }
+
+        } else if (resourceType.equals(FORUMS)){
+            Log.d(TAG, "Forums retrieved ");
+            lForum.clear();
+            for (Forum forum: theSel.getListOfForum()) {
+                lForum.add(gson.toJson(forum));
+            }
+        } else if (resourceType.equals(PERSONNAL_INFO)){
+            Log.d(TAG, "Personnal infos retrieved ");
+            personnalInfo = gson.toJson(theSel.getPersonnalInfo());
+
+        } else if (resourceType.equals(ACCOUNT_INFO)){
+            Log.d(TAG, "Account infos retrieved ");
+            account = gson.toJson(theSel.getAccount());
+            lTrans.clear();
+            for (Transaction trans: theSel.getListOfTransaction()) {
+                lTrans.add(gson.toJson(trans));
+            }
         }
-        for (Person pers : theSel.getListOfPerson()) {
-            lPers.add(gson.toJson(pers));
-        }
-        for (Forum forum: theSel.getListOfForum()) {
-            lForum.add(gson.toJson(forum));
-       }
-        for (Transaction trans: theSel.getListOfTransaction()) {
-            lTrans.add(gson.toJson(trans));
-        }
-        personnalInfo = gson.toJson(theSel.getPersonnalInfo());
-        account  = gson.toJson(theSel.getAccount());
+
     }
 
     @Override

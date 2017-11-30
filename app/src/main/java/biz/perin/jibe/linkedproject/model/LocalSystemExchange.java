@@ -29,8 +29,8 @@ public class LocalSystemExchange extends LetsObservable implements ILocalSystemE
     private final List<Announce> listOfAnnounce = new ArrayList<>();
     private final List<Forum> listOfForum = new ArrayList<>();
     private final List<Transaction> listOfTransaction = new ArrayList<>();
-    private PersonnalInfo personnalInfo = new PersonnalInfo();
-    private Account account = new Account();
+    private PersonnalInfo personnalInfo = null;
+    private Account account = null;
 
     public LocalSystemExchange() {
         for (Forum.forum_category forcat : Forum.forum_category.values()) {
