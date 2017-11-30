@@ -119,7 +119,7 @@ public class ModelInterface implements IModelGUI, LetsObserver {
 
         if (resourceType.equals(ANONYMOUS_ANNOUNCE)){
             Log.d(TAG, "Annon announces retrieved :" + theSel.getListOfAnnounce().size() + " announces");
-            //theSel = new Gson().fromJson(FileHelper.getInstance().readStringFromFile(LETS_MODEL_JSON_FILENAME), LocalSystemExchange.class);
+
             lAnnAnn.clear();
             for (Announce ann : theSel.getListOfAnnounce()) {
                 if (ann.getOwnerPseudo() == null || ann.getOwnerPseudo().equals("")){
@@ -160,14 +160,11 @@ public class ModelInterface implements IModelGUI, LetsObserver {
                 lTrans.add(gson.toJson(trans));
             }
         }
-
     }
 
+    @Override
     public ArrayList<String> getAnnonymousAnnounces() {
-
-
         return (lAnnAnn);
-
     }
 
     @Override

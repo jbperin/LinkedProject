@@ -1,6 +1,7 @@
 package biz.perin.jibe.linkedproject.file;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.*;
 
@@ -8,6 +9,8 @@ import java.io.*;
  * Created by Famille PERIN on 28/10/2017.
  */
 public class FileHelper implements IFiler{
+
+    private static final String TAG = FileHelper.class.getName();
     private static FileHelper ourInstance = new FileHelper();
     private Context context;
 
@@ -15,45 +18,12 @@ public class FileHelper implements IFiler{
     public static FileHelper getInstance() {
         return ourInstance;
     }
+
     public void setContext(Context context) {
-        this.context = context;
-    }
-    private FileHelper() {
-
+        this.context = context.getApplicationContext();
     }
 
-
-//    public static void writeStringAsFile(final String fileContents, String fileName)  {
-//        try {
-//            try(  PrintWriter out = new PrintWriter( fileName )  ){
-//                out.println( fileContents );
-//            }
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public static String readFileAsString(String fileName) {
-//        Charset encoding = Charset.defaultCharset();
-//        byte[] encoded = new byte[0];
-//        try {
-//            encoded = Files.readAllBytes(Paths.get(fileName));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return new String(encoded, encoding);
-//
-//
-//    }
-
-
-    public static void main(String[] args) {
-        final String filename = "toto.txt";
-        FileHelper.getInstance().writeStringToFile("Hello World", filename);
-        String str = FileHelper.getInstance().readStringFromFile(filename);
-        assert (str.equals("Hello World") );
-
-    }
+    private FileHelper() {}
 
     @Override
     public void writeStringToFile(String content, String filename) {
@@ -62,7 +32,7 @@ public class FileHelper implements IFiler{
             out.write(content);
             out.close();
         } catch (IOException e) {
-            // Log.logError(TAG, e);
+            Log.e(TAG, "IOException during writeStringToFile "+e);
         }
     }
 
@@ -77,19 +47,26 @@ public class FileHelper implements IFiler{
             while ((line = in.readLine()) != null) stringBuilder.append(line);
 
         } catch (FileNotFoundException e) {
-            //Log.logError(TAG, e);
+            Log.e(TAG, "FileNotFoundException during readStringFromFile "+e);
         } catch (IOException e) {
-            // Log.logError(TAG, e);
+            Log.e(TAG, "IOException during readStringFromFile "+e);
         }
 
         return stringBuilder.toString();
-
     }
 
     @Override
     public boolean fileExists(String filename) {
         File file = new File(context.getFilesDir(), filename);
         return(file.exists());
-
     }
+
+    public static void main(String[] args) {
+        final String filename = "toto.txt";
+        FileHelper.getInstance().writeStringToFile("Hello World", filename);
+        String str = FileHelper.getInstance().readStringFromFile(filename);
+        assert (str.equals("Hello World") );
+    }
+
+
 }

@@ -23,6 +23,7 @@ import java.util.ArrayList;
  * Created by Jean-Baptiste PERIN on 12/11/2017.
  */
 public interface IModelGUI {
+    public ArrayList<String> getAnnonymousAnnounces();
     public ArrayList<String> getAnnounces();
     public ArrayList<String> getAnnuaire();
     public ArrayList<String> getForums();

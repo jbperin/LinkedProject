@@ -13,26 +13,13 @@ public class Person {
     private String phone1 = null;
     private String phone2 = null;
     private Integer numberOfExchange =null;
-
-
     private String lastPublish = null;
 
-//    public Person(String pseudo, String address, String name, String phone) {
-//        this.pseudo = pseudo;
-//        this.address = address;
-//        this.name = name;
-//        this.phone1 = phone;
-//        this.phone2 = phone;
-//    }
-
-    public Person() {
-
-    }
+    public Person() { }
 
     public void setPseudo(String pseudo) {
         this.pseudo = pseudo;
     }
-
 
     public String getAddress() {
         return address;

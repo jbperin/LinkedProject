@@ -81,9 +81,6 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.add(R.id.content_main, webFragment);
         fragmentTransaction.commit();
 
-
-
-
     }
 
     @Override
@@ -129,7 +126,6 @@ public class MainActivity extends AppCompatActivity
     public void onDestroy (){
         super.onDestroy();
         Log.d(TAG, "onDestroy");
-        //mSelClient.finish();
     }
 
     @Override

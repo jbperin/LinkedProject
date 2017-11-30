@@ -28,8 +28,7 @@ public class ForumMessage {
     String date = null;
     Forum.forum_category category;
 
-    public ForumMessage() {
-    }
+    public ForumMessage() {}
 
     public Integer getDiscussionId() {
         return discussionId;

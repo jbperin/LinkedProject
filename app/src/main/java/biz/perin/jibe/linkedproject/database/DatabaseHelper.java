@@ -96,28 +96,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements LetsObserver{
         createAll(this.getWritableDatabase());
     }
 
-
-//    public void pushInDatabase() {
-//        List<Announce> listeDesAnnonces;
-//        SQLiteDatabase mydatabase = this.getWritableDatabase();
-//        mydatabase.execSQL("DROP TABLE IF EXISTS Announces" );
-//        mydatabase.execSQL(CREATE_ANNOUNCES);
-//        for (Announce ann: listeDesAnnonces){
-//            if (ann != null) {
-//                int Id = ann.getId();
-//                String ownerPseudo = (ann.getOwnerPseudo()==null)? "null":"'"+ann.getOwnerPseudo()+"'";
-//                String description= (ann.getDescription()==null)? "null":"'"+ann.getDescription().replaceAll("'","''")+"'";
-//                String direction = (ann.getDirection().name()==null)? "null":"'"+ann.getDirection()+"'";
-//                String category = (ann.getCategory()==null)? "null":"'"+ann.getCategory()+"'";
-//                String SqlRequest = String.format("INSERT INTO Announces VALUES(%d,%s, %s, %s, %s);", Id, ownerPseudo, description, direction, category);
-//                System.out.println (SqlRequest);
-//                mydatabase.execSQL(SqlRequest);
-//            }
-//        }
-//
-//    }
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         createAll(db);
@@ -154,7 +132,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements LetsObserver{
         String description= (ann.getDescription()==null)? "null":"'"+ann.getDescription().replaceAll("'","''")+"'";
         String direction = (ann.getDirection().name()==null)? "null":"'"+ann.getDirection()+"'";
         String category = (ann.getCategory()==null)? "null":"'"+ann.getCategory()+"'";
-//        String SqlRequest = String.format("INSERT INTO Announces VALUES(%d,%s, %s, %s, %s);", Id, ownerPseudo, description, direction, category);
 
         ContentValues values = new ContentValues();
         values.put("ID", Id);
@@ -164,8 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper implements LetsObserver{
         values.put("category", category);
         int returnCode = (int) mydatabase.insert("Announces", null, values);
 
-        //System.out.println (SqlRequest);
-//        mydatabase.execSQL(SqlRequest);
+
     }
 
     @Override
@@ -176,17 +152,17 @@ public class DatabaseHelper extends SQLiteOpenHelper implements LetsObserver{
         SQLiteDatabase mydatabase = this.getWritableDatabase();
 
 
-        String pseudo = "'" + pers.getPseudo()+"'";
+        String pseudo = pers.getPseudo();
         Integer solde = pers.getSolde();
-        String address = "'" + pers.getAddress()+"'";
-        String name = "'" + pers.getName()+"'";
-        String phone1 = "'" + pers.getPhone1()+"'";
-        String phone2 = "'" + pers.getPhone2()+"'";
+        String address = pers.getAddress();
+        String name = pers.getName();
+        String phone1 = pers.getPhone1();
+        String phone2 = pers.getPhone2();
         Integer numberOfExchange = pers.getNumberOfExchange();
-        String lastPublish = "'" + pers.getLastPublish()+"'";
+        String lastPublish = pers.getLastPublish();
 
         ContentValues values = new ContentValues();
-        //values.put("ID", Id);
+
         values.put("pseudo",pseudo);
         values.put("name", name);
         values.put("address", address);
@@ -196,9 +172,6 @@ public class DatabaseHelper extends SQLiteOpenHelper implements LetsObserver{
         values.put("numberOfExchange", numberOfExchange);
         values.put("lastPublish", lastPublish);
 
-
-        //String SqlRequest = String.format("INSERT INTO Persons VALUES(%s, %d, %s, %s, %s, %s, %d, %s);",pseudo, solde, address, name, phone1, phone2, numberOfExchange,lastPublish);
-        // mydatabase.execSQL(SqlRequest);
         int returnCode = (int) mydatabase.insert("Persons", null, values);
 
     }
@@ -208,62 +181,45 @@ public class DatabaseHelper extends SQLiteOpenHelper implements LetsObserver{
 
         if (mess == null) return;
 
-
         Integer discussionId = mess.getDiscussionId();
-        String pseudo = "'" + mess.getPseudo()+ "'";
-        String text = "'" + mess.getText()+ "'";
-        String date = "'" + mess.getDate()+ "'";
-        String category = "'" + mess.getCategory().toString() +"'";
-
+        String pseudo = mess.getPseudo();
+        String text = mess.getText();
+        String date = mess.getDate();
+        String category = mess.getCategory().toString();
 
         SQLiteDatabase mydatabase = this.getWritableDatabase();
 
-
         ContentValues values = new ContentValues();
-        //values.put("ID", Id);
+
         values.put("pseudo",pseudo);
         values.put("discussionId", discussionId);
         values.put("text", text);
         values.put("date", date);
         values.put("category", category);
 
-//        String SqlRequest = String.format("INSERT INTO Posts VALUES(%s, %d, %s, %s, %s);",pseudo, discussionId, text, date, category);
-//
-//        mydatabase.execSQL(SqlRequest);
-
-
         int returnCode = (int) mydatabase.insert("Posts", null, values);
     }
-
-
-
 
     @Override
     public void onNewTransaction(Transaction trans) {
 
         if (trans == null) return;
 
-        String pseudoOfferer = "'" + trans.getPseudoOfferer() + "'";
-        String pseudoDemander = "'" + trans.getPseudoDemander() + "'";
-        String offerDescription = "'" + trans.getOfferDescription()+"'";
-        String demandDescription = "'" + trans.getDemandDescription()+ "'";
+        String pseudoOfferer = trans.getPseudoOfferer();
+        String pseudoDemander = trans.getPseudoDemander() ;
+        String offerDescription = trans.getOfferDescription();
+        String demandDescription = trans.getDemandDescription();
         Integer amount = trans.getAmount();
 
         SQLiteDatabase mydatabase = this.getWritableDatabase();
 
-//        String SqlRequest = String.format("INSERT INTO Transactions VALUES(%s, %s, %s, %s, %d);",pseudoOfferer, pseudoDemander, offerDescription, demandDescription, amount);
-//
-//        mydatabase.execSQL(SqlRequest);
-
-
         ContentValues values = new ContentValues();
-        //values.put("ID", Id);
+
         values.put("pseudoOfferer",pseudoOfferer);
         values.put("pseudoDemander", pseudoDemander);
         values.put("offerDescription", offerDescription);
         values.put("demandDescription", demandDescription);
         values.put("amount", amount);
-
 
         int returnCode = (int) mydatabase.insert("Transactions", null, values);
     }

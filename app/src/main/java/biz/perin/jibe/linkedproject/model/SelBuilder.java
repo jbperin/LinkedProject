@@ -34,6 +34,7 @@ public class SelBuilder implements ISelReceiver {
     public SelBuilder(ILocalSystemExchange model) {
         this.model = model;
     }
+
     private Integer nullify (String solde){
         int iSolde=0;
         if (solde == null) return (null);
@@ -48,29 +49,27 @@ public class SelBuilder implements ISelReceiver {
                 ex.printStackTrace();
             }
         }
-         return (iSolde); //Integer.parseInt(solde)
+         return (iSolde);
     }
+
+
     @Override
-    public void accept(Entity personnalInfo, String s) {
+    public void accept(Entity entity, String s) {
 
         JSONParser parser = new JSONParser();
         JSONObject jsonObject;
-        //System.out.println("accepted announce : " + s);
+
         try {
             Object obj = parser.parse(s);
 
             jsonObject = (JSONObject) obj;
-            Class<?> c = Class.forName(personnalInfo.className());
+            Class<?> c = Class.forName(entity.className());
             Constructor<?> cons = c.getConstructor();
             Object object = cons.newInstance();
 
-            switch (personnalInfo) {
+            switch (entity) {
                 case SEL_ACCOUNT_INFO:
-
-                    //System.out.println (s);
-
-                {
-                    String nb_echange = (String) jsonObject.get("description");
+                    String nb_echange = (String) jsonObject.get("nb_echange");
                     String solde = (String) jsonObject.get("solde");
                     String solde_actuel = (String) jsonObject.get("solde_actuel");
                     String derniere_publication = (String) jsonObject.get("derniere_publication");
@@ -79,45 +78,43 @@ public class SelBuilder implements ISelReceiver {
                     ((Account)object).setNbEchange(nullify(nb_echange));
                     ((Account)object).setSolde(nullify(solde));
                     ((Account)object).setSoldeActuel(nullify(solde_actuel));
-                }
-                model.add((Account)object);
-                break;
+
+                    model.add((Account)object);
+                    break;
+
                 case SEL_ANONYMOUS_ANNOUNCE:
-                {String description = (String) jsonObject.get("description");
+                    String description = (String) jsonObject.get("description");
                     String direction = (String) jsonObject.get("direction");
                     String category = (String) jsonObject.get("category");
                     String id = (String) jsonObject.get("id");
+
                     if ((category != null) && (!category.equals("null")))
                         ((Announce) object).setCategory(Announce.Category.fromName(category));
                     ((Announce) object).setDirection(Announce.Direction.valueOf(direction));
                     ((Announce) object).setDescription(description);
                     ((Announce) object).setId(nullify(id));
 
-                }
-                model.add((Announce)object);
-                break;
+                    model.add((Announce)object);
+                    break;
+
                 case SEL_ANNOUNCE:
-                    //System.out.println (s);
-                {
-                    String description = (String) jsonObject.get("description");
-                    String direction = (String) jsonObject.get("direction");
-                    String category = (String) jsonObject.get("category");
+                    String ann_description = (String) jsonObject.get("description");
+                    String ann_direction = (String) jsonObject.get("direction");
+                    String ann_category = (String) jsonObject.get("category");
                     String owner_pseudo = (String) jsonObject.get("owner_pseudo");
 
-
-                    //((Announce)object).setOwnerPseudo(null);
-
-                    if ((category != null) && (!category.equals("null")))
-                        ((Announce) object).setCategory(Announce.Category.valueOf(category));
-                    ((Announce) object).setDirection(Announce.Direction.valueOf(direction));
-                    ((Announce) object).setDescription(description);
+                    if ((ann_category != null) && (!ann_category.equals("null")))
+                        ((Announce) object).setCategory(Announce.Category.valueOf(ann_category));
+                    ((Announce) object).setDirection(Announce.Direction.valueOf(ann_direction));
+                    ((Announce) object).setDescription(ann_description);
                     ((Announce) object).setOwnerPseudo(owner_pseudo);
-                    //System.out.println ((Announce)object);
-                }
-                model.add((Announce)object);
-                break;
+
+
+                    model.add((Announce)object);
+                    break;
+
                 case SEL_PERSON:
-                    //System.out.println (s);
+
                     String name = (String) jsonObject.get("name");
                     String pseudo = (String) jsonObject.get("pseudo");
                     String address = (String) jsonObject.get("address");
@@ -125,23 +122,21 @@ public class SelBuilder implements ISelReceiver {
                     String phone1 = (String) jsonObject.get("phone1");
                     String phone2 = (String) jsonObject.get("phone2");
                     String numberOfExchange = (String) jsonObject.get("numberOfExchange");
-                    String solde = (String) jsonObject.get("solde");
+                    String personsolde = (String) jsonObject.get("solde");
 
                     ((Person)object).setAddress(address);
                     ((Person)object).setPseudo(pseudo);
                     ((Person)object).setPhone1(phone1);
                     ((Person)object).setPhone2(phone2);
                     ((Person)object).setNumberOfExchange(nullify(numberOfExchange));
-                    ((Person)object).setSolde(nullify(solde));
+                    ((Person)object).setSolde(nullify(personsolde));
                     ((Person)object).setName(name);
                     ((Person)object).setLastPublish(last_publish);
-                    //System.out.println ((Person)object);
+
                     model.add((Person)object);
-                    //Person pers = gson.fromJson(s,Person.class);
+
                     break;
                 case SEL_TRANSACTION:
-                {//System.out.println (s);
-
                     String pseudoOffer = (String) jsonObject.get("pseudo");
                     String jour = (String) jsonObject.get("jour");
                     String mois = (String) jsonObject.get("mois");
@@ -157,10 +152,10 @@ public class SelBuilder implements ISelReceiver {
 
                     model.add((Transaction)object);
 
-                }
-                break;
+
+                    break;
                 case SEL_MESSAGE_FORUM:
-                    //System.out.println (s);
+
 
                     String forum_name  = (String) jsonObject.get("forum");
                     String date = (String) jsonObject.get("date");
@@ -173,10 +168,10 @@ public class SelBuilder implements ISelReceiver {
                     ((ForumMessage) object).setPseudo(pseudoMessage);
                     ((ForumMessage) object).setText(text);
                     model.add((ForumMessage) object);
-                    //System.out.println ((ForumMessage)object);
+
                     break;
                 case SEL_PERSONNAL_INFO:
-                    //System.out.println (s);
+
                     String code_postal  = (String) jsonObject.get("code_postal");
                     String ville = (String) jsonObject.get("ville");
                     String tel_portable = (String) jsonObject.get("tel_portable");
@@ -200,8 +195,9 @@ public class SelBuilder implements ISelReceiver {
 
                     model.add((PersonnalInfo) object);
                     break;
+
                 case SEL_DISCUSSION_FORUM:
-                    //System.out.println (s);
+
                     String name_of_forum  = (String) jsonObject.get("forum_name");
                     String title = (String) jsonObject.get("title");
                     String id_discussion = (String) jsonObject.get("id_discussion");

@@ -42,7 +42,6 @@ public class Account {
         this.soldeActuel = soldeActuel;
     }
 
-
     public Integer getNbEchange() {
         return nbEchange;
     }

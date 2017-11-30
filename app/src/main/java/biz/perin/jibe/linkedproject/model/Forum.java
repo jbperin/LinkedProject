@@ -65,7 +65,6 @@ public class Forum {
         private static Map<String, forum_category> stringMap = new HashMap<String, forum_category>();
 
         static {
-//            Map<String, Category> stringMap = new HashMap<String, Category>();
             stringMap.put("Annonces hors clous", ANNONCE_HORS_CLOUS);
             stringMap.put("Bons plans", BON_PLAN);
             stringMap.put("Achats groupés" , ACHATS_GROUPE);

@@ -45,12 +45,11 @@ public class Announce {
          Category (String name){
 
              this.name = name;
-             //stringMap.put(name, this);
+
          }
         private static Map<String, Category> stringMap = new HashMap<String, Category>();
 
         static {
-//            Map<String, Category> stringMap = new HashMap<String, Category>();
             stringMap.put("Actions collectives", ACTIONS_COLLECTIVES);
             stringMap.put("Aide à la personne", AIDE_A_LA_PERSONNE);
             stringMap.put("Atelier/Cours" , ATELIER_COURS);
@@ -76,7 +75,7 @@ public class Announce {
         public String toString() {
             return  name ;
         }
-    }        ;
+    }
 
 
 

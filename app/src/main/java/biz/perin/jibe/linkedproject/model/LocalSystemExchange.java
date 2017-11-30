@@ -16,6 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 package biz.perin.jibe.linkedproject.model;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;

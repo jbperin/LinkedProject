@@ -28,11 +28,8 @@ public class WebHelper {
     private boolean authenticated = false;
 
 
-    private WebHelper() {
+    private WebHelper() {}
 
-
-
-    }
     public static WebHelper getInstance(){return mInstance;}
 
     public void setWebClient(IWebClient webClient) {
@@ -51,8 +48,8 @@ public class WebHelper {
             System.out.println("WebClient must be provided use SetWebClient");
             //TODO throw execption
         }
-
     }
+
     public boolean connect() {
         if ((this.login != null) && (this.password != null)) {
             authenticated = false;
@@ -67,6 +64,11 @@ public class WebHelper {
         }
         return authenticated;
     }
+
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
+
     public void getPersonnalInfo(boolean onlinemode) {
 
         String htmlContent = null;
@@ -85,37 +87,26 @@ public class WebHelper {
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println ("Mesinfos : "
-//                                + " email " + params[0]
-//
-//                        );
                         dictPersonalInfo.put("email", params[0] );
-
                     }
                 });
+
         // Vocable
         MyHelper.patternRunThrough(htmlContent
                 , "<input type=\"radio\" name=\"vocable\" value=\"([ A-Za-z]{1,10})\"[ \t\n]*checked='checked'"
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println ("Mesinfos : "
-//                                + " vocable : " + params[0]
-//
-//                        );
                         dictPersonalInfo.put("vocable", params[0]);
                     }
                 });
+
         // Nom
         MyHelper.patternRunThrough(htmlContent
                 , "<input name=\"nom\" type=\"text\" id=\"nom\"  class=\"input300\" value=\"([^\"]*)\" />"
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println ("Mesinfos : "
-//                                + " name :  " + params[0]
-//
-//                        );
                         dictPersonalInfo.put("name", params[0]);
                     }
                 });
@@ -125,26 +116,20 @@ public class WebHelper {
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println ("Mesinfos : "
-//                                + "prenom" + params[0]
-//
-//                        );
                         dictPersonalInfo.put("prenom" ,params[0]);
                     }
                 });
+
         // Date de naissance
         MyHelper.patternRunThrough(htmlContent
                 , "<input name=\"date_naiss_jour\" type=\"text\" id=\"date_naiss\"  class=\"input30\" value=\"([0-9]{0,3})\" />[ \t\n]*<input name=\"date_naiss_mois\" type=\"text\" id=\"date_naiss\"  class=\"input30\" value=\"([0-9]{0,3})\" />[ \t\n]*<input name=\"date_naiss_annee\" type=\"text\" id=\"date_naiss\"  class=\"input30\" value=\"([0-9]{0,4})\" />"
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println ("Mesinfos : "
-//                                + " date naissance :  " + params[0] + " " + params[1] + " " + params[2]
-//
-//                        );
                         dictPersonalInfo.put("date_naissance", params[0] + "/" + params[1] + "/" + params[2]);
                     }
                 });
+
         // Parrain
         // N° et rue
 
@@ -153,57 +138,42 @@ public class WebHelper {
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println ("Mesinfos : "
-//                                + " adresse : " + params[0]
-//
-//                        );
                         dictPersonalInfo.put("adresse", params[0]);
                     }
                 });
 
         // Ville
-        //
         MyHelper.patternRunThrough(htmlContent
                 , "<option value=\"([0-9]{5}) ([^\"]*)\"  selected='selected'>([^<]*)</option>"
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println ("Mesinfos : "
-//                                + " code postal : " + params[0]
-//                                + " ville : " + params[1]
-//
-//                        );
                         dictPersonalInfo.put("code_postal", params[0]);
                         dictPersonalInfo.put("ville", params[1]);
                     }
                 });
+
         // Téléphone
         MyHelper.patternRunThrough(htmlContent
                 , "<input name=\"telephone\" type=\"text\" id=\"telephone\" class=\"input300\" value=\"([0-9 ]*)\" /><br>"
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println ("Mesinfos : "
-//                                + " tel fixe : " + params[0]
-//                        );
                         dictPersonalInfo.put("tel_fixe", params[0]);
                     }
                 });
+
         // Portable
         MyHelper.patternRunThrough(htmlContent
                 , "<input name=\"portable\" type=\"text\" id=\"portable\" class=\"input300\" value=\"([0-9 ]*)\" />"
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println ("Mesinfos : "
-//                                + " tel portable : " + params[0]
-//                        );
                         dictPersonalInfo.put("tel_portable", params[0]);
                     }
 
                 });
 
-        //System.out.println (dictPersonalInfo.toString());
         if (selReceiver != null) selReceiver.accept(ISelReceiver.Entity.SEL_PERSONNAL_INFO, MyHelper.dict2json(dictPersonalInfo));
     }
 
@@ -225,13 +195,6 @@ public class WebHelper {
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println ("Transaction : "
-//                                + " jour " + params[0]
-//                                + " mois " + params[1]
-//                                + " valeur " + params[2]
-//                                + " nature " + params[3]
-//                                + " pseudo " + params[4].substring(1).replace(")","")
-//                        );
 
                         Map<String, String> dictTransactionInfo = new HashMap<>();
                         dictTransactionInfo.put("jour", params[0]);
@@ -248,9 +211,6 @@ public class WebHelper {
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println ("Solde Actuel : " + params[0]
-//
-//                        );
                         dictAccountInfo.put("solde_actuel", params[0]);
 
 
@@ -262,12 +222,6 @@ public class WebHelper {
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-//                        System.out.println (
-//                                "Derniere publication : " + params[0] + " " + params[1]
-//                                        + " Solde : " + params[2]
-//                                        + " Nombre d'echange : " + params[3]
-//
-//                        );
                         dictAccountInfo.put("solde",params[2]);
                         dictAccountInfo.put("nb_echange",params[3]);
                         dictAccountInfo.put("derniere_publication",params[0] + " " + params[1]);
@@ -284,7 +238,6 @@ public class WebHelper {
 
         String htmlContent = null;
 
-
         if (onlinemode) {
             htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/webcatalogue-anonyme/"
                     , new ArrayList<String[]>() {{
@@ -293,7 +246,6 @@ public class WebHelper {
                         add(new String[] {"affich", "cat"});
                         add(new String[] {"lister", "ok"});
                     }});
-
 
             FileHelper.getInstance().writeStringToFile(htmlContent, "OffresAnnon.html");
         }else {
@@ -304,7 +256,6 @@ public class WebHelper {
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-                        //System.out.println (params[1].trim() );
                         Announce nAnnonce = new Announce();
                         nAnnonce.setId(Integer.parseInt(params[0]));
                         nAnnonce.setDescription(params[1].trim());
@@ -313,9 +264,8 @@ public class WebHelper {
                     }
                 });
 
-
         if (onlinemode) {
-            // htmlContent = SelWebClient.getDemands();
+
             htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/webcatalogue-anonyme/"
                     , new ArrayList<String[]>() {{
                         add(new String[] {"annonce", "demandes"});
@@ -333,22 +283,16 @@ public class WebHelper {
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-                        //System.out.println (params[0] + " " + params[1] );
-                        //System.out.println (params[1].trim() );
                         Announce nAnnonce = new Announce();
                         nAnnonce.setId(Integer.parseInt(params[0]));
                         nAnnonce.setDescription(params[1].trim());
                         nAnnonce.setDirection(Announce.Direction.DEMAND);
                         ListeDesAnnonces.add(nAnnonce);
-
-
                     }
                 });
 
         for (final Announce.Category cat: Announce.Category.values()){
-//            System.out.println ("forum_category : " + cat.name());
             if (onlinemode) {
-                //htmlContent = SelWebClient.getDemands(cat);
                 htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/webcatalogue-anonyme/"
                         , new ArrayList<String[]>() {{
                             add(new String[]{"annonce", "demandes"});
@@ -364,27 +308,21 @@ public class WebHelper {
                     , new MyHelper.EntryHandler() {
                         @Override
                         public void processEntry(String[] params) {
-                            //System.out.println(params[0] + " " + params[1]);
-
                             for (Announce ann : ListeDesAnnonces) {
                                 if (ann != null
                                         && ann.getId() == Integer.parseInt(params[0])
                                         && ann.getDescription().equals(params[1])
                                         && ann.getDirection() == Announce.Direction.DEMAND
                                         ) {
-//                                        System.out.println("Category changed !!");
                                     ann.setCategory(cat);
                                 }
                             }
-
                         }
                     });
-
         }
+
         for (final Announce.Category cat : Announce.Category.values()) {
-//            System.out.println("forum_category : " + cat.name());
             if (onlinemode) {
-                //htmlContent = SelWebClient.getOffers(cat);
                 htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/webcatalogue-anonyme/"
                         , new ArrayList<String[]>() {{
                             add(new String[]{"annonce", "offres"});
@@ -400,22 +338,17 @@ public class WebHelper {
                     , new MyHelper.EntryHandler() {
                         @Override
                         public void processEntry(String[] params) {
-//                            System.out.println(params[0] + " " + params[1]);
-
                             for (Announce ann : ListeDesAnnonces) {
                                 if (ann != null
                                         && ann.getId() == Integer.parseInt(params[0])
                                         && ann.getDescription().equals(params[1])
                                         && ann.getDirection() == Announce.Direction.OFFER
                                         ) {
-//                                    System.out.println("Category changed !!");
                                     ann.setCategory(cat);
                                 }
                             }
-
                         }
                     });
-
         }
         for (Announce ann: ListeDesAnnonces) {
             Map<String, String> dictAnnounceInfo = new HashMap<>();
@@ -447,26 +380,18 @@ public class WebHelper {
                 , new MyHelper.EntryHandler() {
                     @Override
                     public void processEntry(String[] params) {
-                        //System.out.println ("a person has just been met : " + params[0] + " " + params[1] );
-
                         String[]tokens = params[0].split("<br />");
                         Person nPersonne = new Person();
                         nPersonne.setPseudo(params[0].trim());
-//                        nPersonne.setId(Integer.parseInt(params[0]));
-//                        nPersonne.setDescription(params[1].trim());
-//                        nPersonne.setDirection(Announce.Direction.OFFER);
                         ListeDesPersonnes.add(nPersonne);
-
                     }
                 });
-
 
         for (final Person pers : ListeDesPersonnes){
 
             final String pseudo = pers.getPseudo();
             htmlContent = null;
             if (onlinemode) {
-//                System.out.println("Retreiving page of "+pseudo);
                 htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/catalogue/index.php?lien=annuaire"
                         , new ArrayList<String[]>() {{
                             add(new String[] {"qui", pseudo});
@@ -480,7 +405,6 @@ public class WebHelper {
                     , new MyHelper.EntryHandler() {
                         @Override
                         public void processEntry(String[] params) {
-                            //System.out.println (pseudo + " info are : " + params[0] + "|" + params[1].replaceAll("&nbsp;","") );
                             Pattern patId = Pattern.compile("(.*) ([0-9]{1,4})");
                             Matcher matcher = patId.matcher(params[0].trim());
                             if (matcher.find()) {
@@ -490,7 +414,6 @@ public class WebHelper {
                             if (fields.length > 1) {
                                 pers.setAddress(fields[0] + "\n" + fields[1]);
                             }
-//                            System.out.println (" name: " + pers.getName() + " adresse: " +  pers.getAddress()  );
                             // TODO Remplir pers avec le contenu de params[1].replaceAll("&nbsp;","")
 
                             List<String> phoneList = findPhoneNumbers(params[1].replaceAll("&nbsp;",""));
@@ -501,15 +424,9 @@ public class WebHelper {
                                     pers.setPhone1(phon);
                                 }
                             }
-
                         }
                     });
-            //<br /> Solde : <br />
-            //<p class="grasitalic">Dernière publication : </p>
-//<p class="grasitalic">Dernière publication : </p>
-//<p class="texte_fiche">
-//T3 2017  <br /> Solde : 245<br /> Nombres d'échanges : 0
-// </p>
+
             MyHelper.patternRunThrough(htmlContent.replaceAll("&nbsp;","")
                     , "<br /> Solde : ([0-9]+)<br />"
                     , new MyHelper.EntryHandler() {
@@ -520,7 +437,7 @@ public class WebHelper {
                             }
                         }
                     });
-//<br /> Nombres d'échanges : 0
+
             MyHelper.patternRunThrough(htmlContent.replaceAll("&nbsp;","")
                     , "<br /> Nombres d'échanges : ([0-9]+)"
                     , new MyHelper.EntryHandler() {
@@ -542,19 +459,7 @@ public class WebHelper {
                             }
                         }
                     });
-
-//            MyHelper.patternRunThrough(htmlContent.replaceAll("&nbsp;","")
-//                    , "****************************"
-//                    , new MyHelper.EntryHandler() {
-//                        @Override
-//                        public void processEntry(String[] params) {
-//
-//                        }
-//                    });
-
-
         }
-
 
         for (Person pers: ListeDesPersonnes) {
             Map<String, String> dictPersonInfo = new HashMap<>();
@@ -571,6 +476,7 @@ public class WebHelper {
         }
         return ListeDesPersonnes;
     }
+
     public void getForums(boolean onlinemode) {
         String htmlContent = null;
 
@@ -586,27 +492,18 @@ public class WebHelper {
                 ,"Vos associations"
                 ,"Humour"
                 ,"Autres"
-
         };
 
         for (final String forum_name :listChoix ) {
 
-//            System.out.println ("Forum : " + forum_name);
-
             String url = "http://sel-des-deux-rives.org/catalogue/index.php?lien=forum&choix="+forum_name.replaceAll(" ","%20");
             if (onlinemode) {
                 htmlContent = webClient.getSimpleWebPage(url);
-//            htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/catalogue/index.php"
-//                    , new ArrayList<String[]>() {{
-//                        add(new String[] {"lien", "forum"});
-//                        add(new String[] {"choix", "Bons plans"});
-//                    }});
                 FileHelper.getInstance().writeStringToFile(htmlContent, "Forums"+forum_name.replaceAll(" ","_")+"_.html");
             } else {
                 htmlContent = FileHelper.getInstance().readStringFromFile("Forums"+forum_name.replaceAll(" ","_")+"_.html");
             }
 
-            //JSONObject obj = new JSONObject();
             class lEntry{
                 String id;
                 String forum_name;
@@ -618,11 +515,6 @@ public class WebHelper {
                     , new MyHelper.EntryHandler() {
                         @Override
                         public void processEntry(String[] params) {
-//                            System.out.println("Discussion : "
-//                                            + " id: " + params[1]
-//                                            + "  Titre: " + params[0]
-////                                    + " text: " + params[2]
-//                            );
                             Map<String,String> dictDiscussionInfo = new HashMap<>();
                             dictDiscussionInfo.put("forum_name", forum_name);
                             dictDiscussionInfo.put("id_discussion", params[1]);
@@ -630,12 +522,12 @@ public class WebHelper {
                             lEntry le = new lEntry ();
                             le.id = params[1];
                             le.forum_name = forum_name;
-                            //String forum_name = "Bons%20plans";
+
                             String UrlPart = "choix=" + forum_name.replaceAll(" ","%20") + "&id_convers=" + params[1].trim();
                             le.urlpart = UrlPart;
                             listUrlPart.add(le);
                             if (selReceiver != null) selReceiver.accept(ISelReceiver.Entity.SEL_DISCUSSION_FORUM, MyHelper.dict2json(dictDiscussionInfo));
-                            //jsForumEntry = new JSONObject();
+
                         }
                     });
 
@@ -653,14 +545,6 @@ public class WebHelper {
                         , new MyHelper.EntryHandler() {
                             @Override
                             public void processEntry(String[] params) {
-//                                System.out.println("Message : "
-//                                                + " pseudo: " + params[0]
-//                                                + " date: " + params[1]
-//                                                + " / " + params[2]
-//                                                + " / " + params[3]
-//                                    + " message : " + params[4].split("</p>")[0].replace("<br />","\n")
-//                                    + " text: " + params[2]
-//                                );
                                 Map<String,String> dictMessageInfo = new HashMap<>();
                                 dictMessageInfo.put("pseudo", params[0]);
                                 dictMessageInfo.put("forum", urlpart.forum_name);
@@ -672,34 +556,8 @@ public class WebHelper {
                                 if (selReceiver != null) selReceiver.accept(ISelReceiver.Entity.SEL_MESSAGE_FORUM, MyHelper.dict2json(dictMessageInfo));
                             }
                         });
-
-
             }
-
-            //jsForumEntry.put("")
         }
-
-        //debugDiscussion();
-
-    }
-
-    private void debugDiscussion() {
-        String htmlContent;
-        htmlContent = FileHelper.getInstance().readStringFromFile("Discussion_1126.html");
-        MyHelper.patternRunThrough(htmlContent.replaceAll("&nbsp;", "")
-                , "<p class=\"forum_2\"><span class=\"grasitalic\">([^0-9]+[0-9]{1,4}) ([0-9]{2})-([0-9]{2})-([0-9]{4})</span></p><p class=\"bordureforum\">([^ù]*)</p>"
-                , new MyHelper.EntryHandler() {
-                    @Override
-                    public void processEntry(String[] params) {
-                        System.out.println("Message : "
-                                        + " pseudo: " + params[0]                                       + " date: " + params[1]
-                                        + " / " + params[2]
-                                        + " / " + params[3]
-                                        + " message : " + params[4].split("</p>")[0].replace("<br />","")
-//                                    + " text: " + params[2]
-                        );
-                    }
-                });
     }
 
     private void getMyAnnounces(boolean onlinemode) {
@@ -711,7 +569,6 @@ public class WebHelper {
             htmlContent = FileHelper.getInstance().readStringFromFile("MyAnnounces.html");
         }
 
-
         MyHelper.patternRunThrough(htmlContent
                 , "lien=mes_annonces&amp;action=supprimer_annonce&amp;quoi=([a-z]*)&amp;id=([0-9]+)&amp;annonce=([^\"]*)\""
                 , new MyHelper.EntryHandler() {
@@ -722,12 +579,8 @@ public class WebHelper {
                                 + " id: " + params[1]
                                 + " text: " + params[2]
                         );
-
-
-
                     }
                 });
-
     }
 
     public static List<String> findPhoneNumbers(String s) {
@@ -749,9 +602,7 @@ public class WebHelper {
 
         for (final Announce.Category cat : Announce.Category.values()) {
 
-
             if (onlinemode) {
-                //htmlContent = SelWebClient.getDemands(cat);
                 htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/catalogue/index.php"
                         , new ArrayList<String[]>() {{
                             add(new String[]{"lien", "demandes"});
@@ -768,10 +619,6 @@ public class WebHelper {
                     , new MyHelper.EntryHandler() {
                         @Override
                         public void processEntry(String[] params) {
-//                            System.out.println(params[3] + " " + params[4]
-//                                   + " " + cat.name()
-//                            );
-
                             Map<String, String> dictAnnounceInfo = new HashMap<>();
                             dictAnnounceInfo.put("description", params[5].trim());
                             dictAnnounceInfo.put("date", params[3].trim());
@@ -788,10 +635,6 @@ public class WebHelper {
                     , new MyHelper.EntryHandler() {
                         @Override
                         public void processEntry(String[] params) {
-//                            System.out.println(params[3] + " " + params[4]
-//                                   + " " + cat.name()
-//                            );
-
                             Map<String, String> dictAnnounceInfo = new HashMap<>();
                             dictAnnounceInfo.put("description", params[1].trim());
                             //dictAnnounceInfo.put("date", params[3].trim());
@@ -805,7 +648,6 @@ public class WebHelper {
                     });
 
             if (onlinemode) {
-                //htmlContent = SelWebClient.getDemands(cat);
                 htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/catalogue/index.php"
                         , new ArrayList<String[]>() {{
                             add(new String[]{"lien", "offres"});
@@ -822,10 +664,6 @@ public class WebHelper {
                     , new MyHelper.EntryHandler() {
                         @Override
                         public void processEntry(String[] params) {
-//                            System.out.println(params[3] + " " + params[4]
-//                                    + " " + cat.name()
-//                            );
-
                             Map<String, String> dictAnnounceInfo = new HashMap<>();
                             dictAnnounceInfo.put("description", params[5].trim());
                             dictAnnounceInfo.put("date", params[3].trim());
@@ -833,8 +671,6 @@ public class WebHelper {
                             dictAnnounceInfo.put("direction", Announce.Direction.OFFER.name());
                             dictAnnounceInfo.put("owner_pseudo", params[4].trim());
                             if (selReceiver != null) selReceiver.accept(ISelReceiver.Entity.SEL_ANNOUNCE, MyHelper.dict2json(dictAnnounceInfo));
-
-
                         }
                     });
             MyHelper.patternRunThrough(htmlContent.replaceAll("&nbsp;", "")
@@ -842,235 +678,15 @@ public class WebHelper {
                     , new MyHelper.EntryHandler() {
                         @Override
                         public void processEntry(String[] params) {
-//                            System.out.println(params[0] + " " + params[1]
-//                                   + " " + cat.name()
-//                            );
-
                             Map<String, String> dictAnnounceInfo = new HashMap<>();
                             dictAnnounceInfo.put("description", params[1].trim());
                             dictAnnounceInfo.put("category", cat.name());
                             dictAnnounceInfo.put("direction", Announce.Direction.OFFER.name());
                             dictAnnounceInfo.put("owner_pseudo", params[0].trim());
                             if (selReceiver != null) selReceiver.accept(ISelReceiver.Entity.SEL_ANNOUNCE, MyHelper.dict2json(dictAnnounceInfo));
-
-
-
                         }
                     });
-
-
         }
-
-
-    }
-
-
-    public void unanonimizeAnnounces ( boolean onlinemode) {
-        String htmlContent = null;
-        //for (final Announce.Category cat : Announce.Category.values()) {
-
-        if (onlinemode) {
-            htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/catalogue/index.php"
-                    , new ArrayList<String[]>() {{
-                        add(new String[]{"lister", "lister"});
-                        add(new String[]{"lien", "demandes"});
-                        add(new String[]{"annonce", "demandes"});
-                        add(new String[]{"affich", "cat"});
-                    }});
-            FileHelper.getInstance().writeStringToFile(htmlContent, "Demandes.html");
-        } else {
-            htmlContent = FileHelper.getInstance().readStringFromFile("Demandes.html");
-        }
-
-        MyHelper.patternRunThrough(htmlContent
-                ,"<span class=\"petit\">(([0-9]{2})-([0-9]{2})-([0-9]{4}))</span>&nbsp;&nbsp;([A-Za-z]+[0-9]{1,3})&nbsp;&nbsp;<a href=\"index.php.lien=demandes&amp;qui=[A-Za-z]+[0-9]{1,3}&amp;texte_annonce=([^\"]*)\" target="
-                , new MyHelper.EntryHandler() {
-                    @Override
-                    public void processEntry(String[] params) {
-                        //System.out.println("the announce to process : " + params[0] + " " + params[4]+ " " + params[5].trim());
-                        Map<String, String> dictAnnounceInfo = new HashMap<>();
-                        dictAnnounceInfo.put("date", params[3].trim());
-                        dictAnnounceInfo.put("description", params[5].trim());
-                        dictAnnounceInfo.put("direction", Announce.Direction.DEMAND.name());
-                        dictAnnounceInfo.put("owner_pseudo", params[4].trim());
-                        if (selReceiver != null) selReceiver.accept(ISelReceiver.Entity.SEL_ANNOUNCE, MyHelper.dict2json(dictAnnounceInfo));
-
-
-                    }
-                });
-        MyHelper.patternRunThrough(htmlContent
-                ,"<span class=\"petit\"></span>&nbsp;&nbsp;([A-Za-z]+[0-9]{1,3})&nbsp;&nbsp;<a href=\"index.php.lien=demandes&amp;qui=[A-Za-z]+[0-9]{1,3}&amp;texte_annonce=([^\"]*)\" target="
-                , new MyHelper.EntryHandler() {
-                    @Override
-                    public void processEntry(String[] params) {
-                        //System.out.println("the announce to process : " + params[0] + " " + params[4]+ " " + params[5].trim());
-                        Map<String, String> dictAnnounceInfo = new HashMap<>();
-                        dictAnnounceInfo.put("description", params[1].trim());
-                        dictAnnounceInfo.put("direction", Announce.Direction.DEMAND.name());
-                        dictAnnounceInfo.put("owner_pseudo", params[0].trim());
-                        if (selReceiver != null) selReceiver.accept(ISelReceiver.Entity.SEL_ANNOUNCE, MyHelper.dict2json(dictAnnounceInfo));
-
-                    }
-                });
-        //}
-        if (onlinemode) {
-            htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/catalogue/index.php"
-                    , new ArrayList<String[]>() {{
-                        add(new String[]{"lister", "lister"});
-                        add(new String[]{"lien", "offres"});
-                        add(new String[]{"annonce", "offres"});
-                        add(new String[]{"affich", "cat"});
-                    }});
-            FileHelper.getInstance().writeStringToFile(htmlContent, "Offres.html");
-        } else {
-            htmlContent = FileHelper.getInstance().readStringFromFile("Offres.html");
-        }
-
-        MyHelper.patternRunThrough(htmlContent
-                ,"<span class=\"petit\">(([0-9]{2})-([0-9]{2})-([0-9]{4}))</span>&nbsp;&nbsp;([A-Za-z]+[0-9]{1,3})&nbsp;&nbsp;<a href=\"index.php.lien=offres&amp;qui=[A-Za-z]+[0-9]{1,3}&amp;texte_annonce=([^\"]*)\" target="
-                , new MyHelper.EntryHandler() {
-                    @Override
-                    public void processEntry(String[] params) {
-                        //System.out.println("the announce to process : " + params[0] + " " + params[4]+ " " + params[5].trim());
-                        Map<String, String> dictAnnounceInfo = new HashMap<>();
-                        dictAnnounceInfo.put("date", params[3].trim());
-                        dictAnnounceInfo.put("description", params[5].trim());
-                        dictAnnounceInfo.put("direction", Announce.Direction.OFFER.name());
-                        dictAnnounceInfo.put("owner_pseudo", params[4].trim());
-                        if (selReceiver != null) selReceiver.accept(ISelReceiver.Entity.SEL_ANNOUNCE, MyHelper.dict2json(dictAnnounceInfo));
-
-                    }
-                });
-        MyHelper.patternRunThrough(htmlContent
-                ,"<span class=\"petit\"></span>&nbsp;&nbsp;([A-Za-z]+[0-9]{1,3})&nbsp;&nbsp;<a href=\"index.php.lien=offres&amp;qui=[A-Za-z]+[0-9]{1,3}&amp;texte_annonce=([^\"]*)\" target="
-                , new MyHelper.EntryHandler() {
-                    @Override
-                    public void processEntry(String[] params) {
-                        //System.out.println("the announce to process : " + params[0] + " " + params[4]+ " " + params[5].trim());
-                        Map<String, String> dictAnnounceInfo = new HashMap<>();
-                        dictAnnounceInfo.put("description", params[1].trim());
-                        dictAnnounceInfo.put("direction", Announce.Direction.OFFER.name());
-                        dictAnnounceInfo.put("owner_pseudo", params[0].trim());
-                        if (selReceiver != null) selReceiver.accept(ISelReceiver.Entity.SEL_ANNOUNCE, MyHelper.dict2json(dictAnnounceInfo));
-
-                    }
-                });
-//        for (Announce ann: lAnnonces) {
-//            Map<String, String> dictAnnounceInfo = new HashMap<>();
-//            dictAnnounceInfo.put("id", String.format("%d",ann.getId()));
-//            dictAnnounceInfo.put("category", (ann.getCategory() != null)?ann.getCategory().toString(): "null");
-//            dictAnnounceInfo.put("description", ann.getDescription());
-//            dictAnnounceInfo.put("direction", ann.getDirection().toString());
-//            dictAnnounceInfo.put("owner_pseudo", ann.getOwnerPseudo());
-//            if (selReceiver != null) selReceiver.accept(ISelReceiver.Entity.SEL_ANNOUNCE, MyHelper.dict2json(dictAnnounceInfo));
-//        }
-
-    }
-    public void unanonimizeAnnounces (final List<Announce> lAnnonces, boolean onlinemode){
-        String htmlContent = null;
-        //for (final Announce.Category cat : Announce.Category.values()) {
-
-        if (onlinemode) {
-            htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/catalogue/index.php"
-                    , new ArrayList<String[]>() {{
-                        add(new String[]{"lister", "lister"});
-                        add(new String[]{"lien", "demandes"});
-                        add(new String[]{"annonce", "demandes"});
-                        add(new String[]{"affich", "cat"});
-                    }});
-            FileHelper.getInstance().writeStringToFile(htmlContent, "Demandes.html");
-        } else {
-            htmlContent = FileHelper.getInstance().readStringFromFile("Demandes.html");
-        }
-
-        MyHelper.patternRunThrough(htmlContent
-                ,"<span class=\"petit\">(([0-9]{2})-([0-9]{2})-([0-9]{4}))</span>&nbsp;&nbsp;([A-Za-z]+[0-9]{1,3})&nbsp;&nbsp;<a href=\"index.php.lien=demandes&amp;qui=[A-Za-z]+[0-9]{1,3}&amp;texte_annonce=([^\"]*)\""
-                , new MyHelper.EntryHandler() {
-                    @Override
-                    public void processEntry(String[] params) {
-                        //System.out.println("the announce to process : " + params[0] + " " + params[4]+ " " + params[5].trim());
-                        for (Announce ann : lAnnonces) {
-                            if (ann.getDescription().trim().equals(params[5].trim())){
-                                ann.setOwnerPseudo(params[4].trim());
-                                // TODO Add date attribute
-                                //System.out.println("Owner of dated demand " + ann.getId()+" is " + ann.getOwnerPseudo());
-                            }
-                        }
-
-                    }
-                });
-        MyHelper.patternRunThrough(htmlContent
-                ,"<span class=\"petit\"></span>&nbsp;&nbsp;([A-Za-z]+[0-9]{1,3})&nbsp;&nbsp;<a href=\"index.php.lien=demandes&amp;qui=[A-Za-z]+[0-9]{1,3}&amp;texte_annonce=([^\"]*)\""
-                , new MyHelper.EntryHandler() {
-                    @Override
-                    public void processEntry(String[] params) {
-                        //System.out.println("the announce to process : " + params[0] + " " + params[4]+ " " + params[5].trim());
-                        for (Announce ann : lAnnonces) {
-                            if (ann.getDescription().trim().equals(params[2].trim())){
-                                ann.setOwnerPseudo(params[1].trim());
-                                // TODO Add date attribute
-                                //System.out.println("Owner of undated demand " + ann.getId()+" is " + ann.getOwnerPseudo());
-                            }
-                        }
-
-                    }
-                });
-        //}
-        if (onlinemode) {
-            htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/catalogue/index.php"
-                    , new ArrayList<String[]>() {{
-                        add(new String[]{"lister", "lister"});
-                        add(new String[]{"lien", "offres"});
-                        add(new String[]{"annonce", "offres"});
-                        add(new String[]{"affich", "cat"});
-                    }});
-            FileHelper.getInstance().writeStringToFile(htmlContent, "Offres.html");
-        } else {
-            htmlContent = FileHelper.getInstance().readStringFromFile("Offres.html");
-        }
-
-        MyHelper.patternRunThrough(htmlContent
-                ,"<span class=\"petit\">(([0-9]{2})-([0-9]{2})-([0-9]{4}))</span>&nbsp;&nbsp;([A-Za-z]+[0-9]{1,3})&nbsp;&nbsp;<a href=\"index.php.lien=offres&amp;qui=[A-Za-z]+[0-9]{1,3}&amp;texte_annonce=([^\"]*)\""
-                , new MyHelper.EntryHandler() {
-                    @Override
-                    public void processEntry(String[] params) {
-                        //System.out.println("the announce to process : " + params[0] + " " + params[4]+ " " + params[5].trim());
-                        for (Announce ann : lAnnonces) {
-                            if (ann.getDescription().trim().equals(params[5].trim())){
-                                ann.setOwnerPseudo(params[4].trim());
-                                // TODO Add date attribute
-                                //System.out.println("Owner of dated offer " + ann.getId()+" is " + ann.getOwnerPseudo());
-                            }
-                        }
-
-                    }
-                });
-        MyHelper.patternRunThrough(htmlContent
-                ,"<span class=\"petit\"></span>&nbsp;&nbsp;([A-Za-z]+[0-9]{1,3})&nbsp;&nbsp;<a href=\"index.php.lien=offres&amp;qui=[A-Za-z]+[0-9]{1,3}&amp;texte_annonce=([^\"]*)\""
-                , new MyHelper.EntryHandler() {
-                    @Override
-                    public void processEntry(String[] params) {
-                        //System.out.println("the announce to process : " + params[0] + " " + params[4]+ " " + params[5].trim());
-                        for (Announce ann : lAnnonces) {
-                            if (ann.getDescription().trim().equals(params[1].trim())){
-                                ann.setOwnerPseudo(params[0].trim());
-                                // TODO Add date attribute
-                                //System.out.println("Owner of undated offer " + ann.getId()+" is " + ann.getOwnerPseudo());
-                            }
-                        }
-
-                    }
-                });
-        for (Announce ann: lAnnonces) {
-            Map<String, String> dictAnnounceInfo = new HashMap<>();
-            dictAnnounceInfo.put("id", String.format("%d",ann.getId()));
-            dictAnnounceInfo.put("category", (ann.getCategory() != null)?ann.getCategory().toString(): "null");
-            dictAnnounceInfo.put("description", ann.getDescription());
-            dictAnnounceInfo.put("direction", ann.getDirection().toString());
-            dictAnnounceInfo.put("owner_pseudo", ann.getOwnerPseudo());
-            if (selReceiver != null) selReceiver.accept(ISelReceiver.Entity.SEL_ANNOUNCE, MyHelper.dict2json(dictAnnounceInfo));
-        }
-
     }
 
     public boolean publishUrgentAnnounce(   ){
@@ -1087,7 +703,6 @@ public class WebHelper {
                     add(new String[]{"bouton","Enregister"}); //
 
                 }});
-        //System.out.println(htmlContent);
         FileHelper.getInstance().writeStringToFile(htmlContent, "Result.html");
         return result;
     }
@@ -1105,7 +720,6 @@ public class WebHelper {
                     add(new String[] {"your-subject", subject});
                     add(new String[] {"your-message", text});
                 }});
-        System.out.println(htmlContent);
         FileHelper.getInstance().writeStringToFile(htmlContent, "ResultSendMessage.html");
         return result;
     }
@@ -1122,7 +736,6 @@ public class WebHelper {
                     add(new String[]{"bouton", "Enregister"}); //
 
                 }});
-        //System.out.println(htmlContent);
         FileHelper.getInstance().writeStringToFile(htmlContent, "Result.html");
         return result;
     }
@@ -1140,7 +753,6 @@ public class WebHelper {
                     add(new String[]{"memoireT", "T3"});
 
                 }});
-        //System.out.println(htmlContent);
         FileHelper.getInstance().writeStringToFile(htmlContent, "Result.html");
         return result;
     }
@@ -1159,7 +771,6 @@ public class WebHelper {
                     add(new String[]{"mise_a_jour", "ok"});
 
                 }});
-        //System.out.println(htmlContent);
         FileHelper.getInstance().writeStringToFile(htmlContent, "Result.html");
         return result;
     }
@@ -1191,22 +802,18 @@ public class WebHelper {
                     add(new String[]{"qui", login});
                     add(new String[]{"ext", "jpg"});
                 }});
-        //System.out.println(htmlContent);
         FileHelper.getInstance().writeStringToFile(htmlContent, "Result.html");
         return result;
     }
+
     private void unpublishAnnounce() {
 
-
         String htmlContent = webClient.getSimpleWebPage("http://sel-des-deux-rives.org/catalogue/index.php?lien=mes_annonces&confirmer=confirm_suppr&id=2066&quoi=demande");
-
         FileHelper.getInstance().writeStringToFile(htmlContent, "Result.html");
 
     }
 
     public static void main(String[] args) {
-
-        //System.out.println("Hello world");
 
         List<Announce> lAnnonces = WebHelper.getInstance().getAnonymousAnnounces(false);
         String userLogin = "" ;
@@ -1214,7 +821,7 @@ public class WebHelper {
         WebHelper.getInstance().setAuthenticationInformation(userLogin, userPassword);
         List<Person> lPersonnes = WebHelper.getInstance().getAnnuaire(false);
 
-        WebHelper.getInstance().unanonimizeAnnounces (lAnnonces, false);
+
         //WebHelper.getInstance().publishTansaction();
         //WebHelper.getInstance().publishSold();
         WebHelper.getInstance().getAccountInfo (false);
@@ -1241,8 +848,5 @@ public class WebHelper {
     }
 
 
-    public boolean isAuthenticated() {
-        return authenticated;
-    }
-}
+ }
 

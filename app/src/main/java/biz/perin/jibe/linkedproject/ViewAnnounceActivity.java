@@ -21,7 +21,6 @@ public class ViewAnnounceActivity extends AppCompatActivity {
         String jsValues = getIntent().getStringExtra("biz.perin.jibe.ANNOUNCE_DATA");
         HashMap<String, String> dictValues = MyHelper.json2dict(jsValues);
 
-        System.out.println(jsValues);
 
         ImageView tvDirection = (ImageView) findViewById(R.id.ann_direction);
         TextView tvIdAnnonce = (TextView) findViewById(R.id.idAnn);

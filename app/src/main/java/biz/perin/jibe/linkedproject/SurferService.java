@@ -29,8 +29,6 @@ import static biz.perin.jibe.linkedproject.Constants.*;
  */
 public class SurferService extends IntentService{
 
-
-
     private final String TAG = SurferService.class.getName();
 
     public SurferService() {
@@ -41,7 +39,6 @@ public class SurferService extends IntentService{
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         int result = super.onStartCommand(intent, flags, startId);
-
         return result;
     }
 
@@ -51,15 +48,12 @@ public class SurferService extends IntentService{
         String resType = intent.getStringExtra("RessourceType");
 
         if (resType.equals(ANONYMOUS_ANNOUNCE)){
-            //sLog.d(TAG, "Anonymous announce were downloaded.");
             Log.d(TAG, "Start thread downloading anonymous announce ..");
             WebHelper.getInstance().getAnonymousAnnounces(true);
 
             localIntent =
                     new Intent(WEB_PART_VISITED)
                             .putExtra("resType", resType);
-
-
 
         } else if (resType.equals(LOGIN)) {
             Log.d(TAG, "Connecting ..");

@@ -44,7 +44,7 @@ public class MyHelper {
             gzip.write(str.getBytes("UTF-8"));
             gzip.close();
             String outStr = obj.toString("UTF-8");
-            System.out.println("Output String length : " + outStr.length());
+
             result = outStr;
         } catch (java.io.UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -60,7 +60,6 @@ public class MyHelper {
             return str;
         }
         try {
-            System.out.println("Input String length : " + str.length());
             java.util.zip.GZIPInputStream gis = new java.util.zip.GZIPInputStream(new java.io.ByteArrayInputStream(str.getBytes("UTF-8")));
             java.io.BufferedReader bf = new java.io.BufferedReader(new java.io.InputStreamReader(gis, "UTF-8"));
             String outStr = "";
@@ -68,7 +67,7 @@ public class MyHelper {
             while ((line = bf.readLine()) != null) {
                 outStr += line;
             }
-            System.out.println("Output String length : " + outStr.length());
+
         } catch (java.io.UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (java.io.IOException e) {
@@ -80,8 +79,6 @@ public class MyHelper {
     public static String dict2json(Map<String, String> dictPersonalInfo) {
         Gson gson = new GsonBuilder().serializeNulls().create();
         String userJson = gson.toJson(dictPersonalInfo);
-        //System.out.println("**************       "+userJson);
-        //return (dictPersonalInfo.toString());
         return (userJson);
     }
 
@@ -93,8 +90,6 @@ public class MyHelper {
         for (Map.Entry ent:ssEntry) {
             dictValues.put((String)ent.getKey(), ent.getValue().toString());
         }
-        //System.out.println("**************       "+userJson);
-        //return (dictPersonalInfo.toString());
         return (dictValues);
     }
 
@@ -118,11 +113,6 @@ public class MyHelper {
             }
             hndl.processEntry(params);
         }
-
-        if(!found){
-//            System.out.println("No match found.\n");
-        }
-
     }
 
 
