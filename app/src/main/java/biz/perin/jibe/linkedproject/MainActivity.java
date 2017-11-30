@@ -78,7 +78,8 @@ public class MainActivity extends AppCompatActivity
             Log.d(TAG, "Sel client already available");
         }
 
-
+        TextView tvDisplay = (TextView) findViewById(R.id.displayedText);
+        tvDisplay.setText("Il y a "+mSelClient.getModel().getAnnounces().size() + " annonces");
 
         FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.content_main, webFragment);
@@ -176,7 +177,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.action_refresh) {
 
-            refreshView();
+            //refreshView();
+            TextView tvDisplay = (TextView) findViewById(R.id.displayedText);
+            tvDisplay.setText("Il y a "+mSelClient.getModel().getAnnounces().size() + " annonces");
             return true;
         }
 

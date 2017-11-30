@@ -22,6 +22,7 @@ import org.json.simple.parser.ParseException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.text.DecimalFormat;
 
 /**
  * Created by Jean-Baptiste PERIN on 02/11/2017.
@@ -34,8 +35,20 @@ public class SelBuilder implements ISelReceiver {
         this.model = model;
     }
     private Integer nullify (String solde){
+        int iSolde=0;
         if (solde == null) return (null);
-        return (solde.equals("null")?null:Integer.parseInt(solde));
+        if (solde.equals("null")) return (null);
+        try {
+            iSolde = Integer.parseInt(solde);
+        } catch (java.lang.NumberFormatException e) {
+            e.printStackTrace();
+            try {
+                iSolde = new DecimalFormat("+#;-#").parse(solde).intValue();
+            } catch (java.text.ParseException ex) {
+                ex.printStackTrace();
+            }
+        }
+         return (iSolde); //Integer.parseInt(solde)
     }
     @Override
     public void accept(Entity personnalInfo, String s) {
