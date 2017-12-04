@@ -88,7 +88,7 @@ public class MyHelper {
         JsonObject jsobj = new JsonParser().parse(jsString).getAsJsonObject();
         Set<Map.Entry<String, com.google.gson.JsonElement>> ssEntry = jsobj.entrySet();
         for (Map.Entry ent:ssEntry) {
-            dictValues.put((String)ent.getKey(), ent.getValue().toString());
+            dictValues.put((String)ent.getKey(), ((com.google.gson.JsonElement)ent.getValue()).getAsString());
         }
         return (dictValues);
     }

@@ -18,11 +18,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import static biz.perin.jibe.linkedproject.Constants.COUNTERPART;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
         ,AnnounceFragment.OnListAnnounceInteractionListener
         ,AnnounceFragment.ListAnnounceDataProvider
 {
+
 
     private final String TAG = MainActivity.class.getName();
 
@@ -172,6 +175,11 @@ public class MainActivity extends AppCompatActivity
             //refreshView();
             TextView tvDisplay = (TextView) findViewById(R.id.displayedText);
             tvDisplay.setText("Il y a "+mSelClient.getModel().getAnnonymousAnnounces().size() + " annonces");
+
+            Intent intent = new Intent(this, PublishTransactionActivity.class);
+            intent.putExtra(COUNTERPART, "unknown");
+            startActivity(intent);
+
             return true;
         }
 
@@ -233,6 +241,8 @@ public class MainActivity extends AppCompatActivity
     private void refreshView() {
         TextView tv = (TextView) findViewById(R.id.displayedText);
         tv.setText("To be defined");
+
+
     }
 
 

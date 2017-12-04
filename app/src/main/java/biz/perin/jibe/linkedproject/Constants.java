@@ -31,5 +31,5 @@ public class Constants {
     public static final String PERSONNAL_INFO = "PERSONNAL_INFO";
     public static final String ACCOUNT_INFO = "ACCOUNT_INFO";
 
-
+    public static final String COUNTERPART = "counterpart";
 }

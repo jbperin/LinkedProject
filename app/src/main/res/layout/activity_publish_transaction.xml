@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_publish_transaction"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        tools:context="biz.perin.jibe.linkedproject.PublishTransactionActivity"
+        android:weightSum="1">
+
+    <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etPseudo"/>
+
+    <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/radioButton"
+            tools:orientation="horizontal">
+
+        <RadioButton
+                android:text="Recoit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/rbtPublishReceive"
+                android:layout_weight="1"/>
+
+        <RadioButton
+                android:text="Donne"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/rbtPublishGive"/>
+    </RadioGroup>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="149dp"
+            android:layout_weight="0.19">
+
+        <NumberPicker
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/numberPicker"
+                android:layout_weight="1"/>
+
+        <TextView
+                android:text="clous en date "
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView6"
+                android:layout_weight="1"
+                android:gravity="bottom|center_vertical"/>
+
+        <DatePicker
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/datePicker"
+                android:layout_weight="1"
+                android:datePickerMode="spinner"
+                android:calendarViewShown="false"
+                android:startYear="2017"
+                style="@android:style/Widget.DatePicker"/>
+    </LinearLayout>
+
+    <TextView
+            android:text="clous en échange de :"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView2"/>
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:layout_weight="0.87"
+            android:id="@+id/etNatureEchange"/>
+
+    <Button
+            android:text="Enregistrer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnPublishTransaction"/>
+</LinearLayout>

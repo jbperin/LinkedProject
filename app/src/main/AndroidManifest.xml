@@ -43,6 +43,8 @@ uses-permission android:name="android.permission.GET_ACCOUNTS"/>
         </activity>
         <activity android:name=".ContactActivity">
         </activity>
+        <activity android:name=".PublishTransactionActivity">
+        </activity>
     </application>
 
 </manifest>
