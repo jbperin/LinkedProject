@@ -50,16 +50,16 @@ public class PublishTransactionActivity extends AppCompatActivity {
         textView.setAdapter(adapter);
         textView.setThreshold(1);
 
-        NumberPicker npNbClous = (NumberPicker)findViewById(R.id.numberPicker);
-        npNbClous.setMinValue(1);
-        npNbClous.setValue(60);
-        npNbClous.setMaxValue(100);
+        TextView tvNbClous = (TextView)findViewById(R.id.etNbClous);
+        //tvNbClous.setMinValue(1);
+        tvNbClous.setText("60");
+        //tvNbClous.setMaxValue(100);
 
         Button btEnregistrer = (Button) findViewById(R.id.btnPublishTransaction);
         btEnregistrer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int nbClous = ((NumberPicker) findViewById(R.id.numberPicker)).getValue();
+                int nbClous = Integer.parseInt(((TextView) findViewById(R.id.etNbClous)).getText().toString());
                 String pseudo = ((TextView) findViewById(R.id.etPseudo)).getText().toString();
                 String nature = ((TextView) findViewById(R.id.etNatureEchange)).getText().toString();
                 RadioButton rbOffre = (RadioButton) findViewById(R.id.rbtPublishGive);
