@@ -13,82 +13,99 @@
         tools:context="biz.perin.jibe.linkedproject.PublishTransactionActivity"
         android:weightSum="1">
 
-    <AutoCompleteTextView
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/etPseudo"/>
+            android:layout_height="match_parent">
 
-    <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checkedButton="@+id/radioButton"
-            tools:orientation="horizontal">
-
-        <RadioButton
-                android:text="Recoit"
+        <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/rbtPublishReceive"
-                android:layout_weight="1"/>
+                android:layout_height="wrap_content">
 
-        <RadioButton
-                android:text="Donne"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/rbtPublishGive"/>
-    </RadioGroup>
+            <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/etPseudo"
+                    android:layout_weight="1"/>
 
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.19">
+            <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:checkedButton="@+id/radioButton"
+                    tools:orientation="horizontal"
+                    android:layout_weight="1">
 
-        <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:ems="10"
-                android:id="@+id/etNbClous"
-                android:layout_weight="1"
-                android:text="60"/>
+                <RadioButton
+                        android:text="Recoit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/rbtPublishReceive"
+                        android:layout_weight="1"/>
 
-        <TextView
-                android:text="clous en date du "
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView6"
-                android:layout_weight="1"
-                android:gravity="bottom|center_vertical"/>
+                <RadioButton
+                        android:text="Donne"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:id="@+id/rbtPublishGive"/>
+            </RadioGroup>
 
-        <TextView
-                android:text="01/01/2017"
-                android:layout_width="match_parent"
-                android:layout_height="49dp"
-                android:id="@+id/tvDateDisplay"
-                android:layout_weight="1"
-                android:clickable="true"/>
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
 
-    </LinearLayout>
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:ems="10"
+                            android:id="@+id/etNbClous"
+                            android:layout_weight="1"
+                            android:text="60"/>
 
-    <TextView
-            android:text="clous en échange de :"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView2"/>
+                    <TextView
+                            android:text="clous en date du "
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView6"
+                            android:layout_weight="1"
+                            android:gravity="bottom|center_vertical"/>
 
-    <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:layout_weight="0.87"
-            android:id="@+id/etNatureEchange"/>
+                    <TextView
+                            android:text="01/01/2017"
+                            android:layout_width="match_parent"
+                            android:layout_height="49dp"
+                            android:id="@+id/tvDateDisplay"
+                            android:layout_weight="1"
+                            android:clickable="true"/>
 
-    <Button
-            android:text="Enregistrer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnPublishTransaction"/>
+                </LinearLayout>
+
+            <TextView
+                    android:text="clous en échange de :"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2"
+                    android:layout_weight="1"/>
+
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:layout_weight="0.87"
+                    android:id="@+id/etNatureEchange"
+                    android:inputType="text"/>
+
+            <Button
+                    android:text="Enregistrer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnPublishTransaction"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+
 </LinearLayout>
