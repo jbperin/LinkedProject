@@ -756,17 +756,17 @@ public class WebHelper {
         FileHelper.getInstance().writeStringToFile(htmlContent, "Result.html");
         return result;
     }
-    public boolean publishTansaction(   ){
+    public boolean publishTansaction( final int day, final int month, final int year, final int amount, final String nature, final String who  ){
         boolean result = false;
         String htmlContent = webClient.getFormWebPage("http://sel-des-deux-rives.org/catalogue/index.php"
                 , new ArrayList<String[]>() {{
                     add(new String[]{"lien", "mes_clous"});
-                    add(new String[]{"jour", "17"});
-                    add(new String[]{"mois", "10"});
-                    add(new String[]{"annee", "2017"});
-                    add(new String[]{"nb", "45"});
-                    add(new String[]{"nature_echange", "Informatique"});
-                    add(new String[]{"qui", "Claire203"});
+                    add(new String[]{"jour", String.format ("%d",day)}); // "17"
+                    add(new String[]{"mois", String.format ("%d",month)}); //"10"
+                    add(new String[]{"annee", String.format ("%d",year)}); //"2017"
+                    add(new String[]{"nb", String.format ("%d",amount)}); //"45"
+                    add(new String[]{"nature_echange", nature }); //"Informatique"
+                    add(new String[]{"qui", who}); //"Claire203"
                     add(new String[]{"sens", "offre"});
                     add(new String[]{"mise_a_jour", "ok"});
 

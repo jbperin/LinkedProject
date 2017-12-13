@@ -151,6 +151,12 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
             }
         }
     }
+
+    public void publishTansaction(int day, int month, int year, int nbClous, String nature, String pseudo) {
+
+        WebHelper.getInstance().publishTansaction(day, month, year, nbClous, nature, pseudo);
+    }
+
     private class DownloadStateReceiver extends BroadcastReceiver {
         private DownloadStateReceiver() {
         }

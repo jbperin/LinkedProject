@@ -42,7 +42,7 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="149dp"
+            android:layout_height="wrap_content"
             android:layout_weight="0.19">
 
         <EditText
@@ -55,22 +55,21 @@
                 android:text="60"/>
 
         <TextView
-                android:text="clous en date "
+                android:text="clous en date du "
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView6"
                 android:layout_weight="1"
                 android:gravity="bottom|center_vertical"/>
 
-        <DatePicker
+        <TextView
+                android:text="01/01/2017"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/datePicker"
+                android:layout_height="49dp"
+                android:id="@+id/tvDateDisplay"
                 android:layout_weight="1"
-                android:datePickerMode="spinner"
-                android:calendarViewShown="false"
-                android:startYear="2017"
-                style="@android:style/Widget.DatePicker"/>
+                android:clickable="true"/>
+
     </LinearLayout>
 
     <TextView

@@ -1,22 +1,23 @@
 package biz.perin.jibe.linkedproject;
 
+import android.app.DatePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static biz.perin.jibe.linkedproject.Constants.COUNTERPART;
 
 import static biz.perin.jibe.linkedproject.MyHelper.json2dict;
 
-public class PublishTransactionActivity extends AppCompatActivity {
+public class PublishTransactionActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
 
     private final String TAG = PublishTransactionActivity.class.getName();
+
+    private int day, month, year;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,24 @@ public class PublishTransactionActivity extends AppCompatActivity {
         tvNbClous.setText("60");
         //tvNbClous.setMaxValue(100);
 
+
+
+        TextView tvDateDisplay = (TextView) findViewById(R.id.tvDateDisplay);
+        Calendar now = Calendar.getInstance();
+        day= now.get(Calendar.DATE);
+        month = now.get(Calendar.MONTH)+1;
+        year = now.get(Calendar.YEAR);
+        tvDateDisplay.setText(String.format("%02d/%02d/%04d", day, month, year));
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this   , this, year, month-1, day );
+        tvDateDisplay.setOnClickListener(new
+                                                 View.OnClickListener() {
+                                                     @Override
+                                                     public void onClick(View view) {
+                                                         datePickerDialog.show();
+                                                     }
+                                                 });
+
         Button btEnregistrer = (Button) findViewById(R.id.btnPublishTransaction);
         btEnregistrer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,19 +84,34 @@ public class PublishTransactionActivity extends AppCompatActivity {
                 RadioButton rbOffre = (RadioButton) findViewById(R.id.rbtPublishGive);
                 RadioButton rbDemande = (RadioButton) findViewById(R.id.rbtPublishReceive);
 
-                Log.d(TAG, "publish transaction : " + nbClous + " avec " + pseudo + " à propos de " + nature);
+
                 if (lPseudo.contains(pseudo) && (rbDemande.isChecked() || rbOffre.isChecked())) {
                     String sens = "offre";
                     if (rbDemande.isChecked()) {
                         sens = "demande";
+                        //nbClous = -nbClous;
                     }
-
+                    Log.d(TAG, "publish transaction : " + nbClous + " avec " + pseudo + " en date du " + String.format("%02d/%02d/%04d", day, month, year) + " à propos de " + nature);
+                    LetsClient.getInstance().publishTansaction(day, month, year, nbClous, nature, pseudo);
+                    finish();
                 } else  {
 
 
                 }
-                finish();
+
             }
         });
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int selectedYear,
+                          int selectedMonth, int selectedDay) {
+        day = selectedDay;
+        month = selectedMonth+1;
+        year = selectedYear;
+        TextView tvDateDisplay = (TextView) findViewById(R.id.tvDateDisplay);
+        tvDateDisplay.setText(selectedDay + " / " + (selectedMonth + 1) + " / "
+                + selectedYear);
+        Log.d(TAG, "onDateSet " + day + " i1 " + month + " i2 " + year);
     }
 }
