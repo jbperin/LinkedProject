@@ -208,6 +208,11 @@ public class ModelInterface implements IModelGUI, LetsObserver {
     }
 
     @Override
+    public void onNewAccount(Account acc) {
+        account = new Gson().toJson(acc);
+    }
+
+    @Override
     public String getPersonnalInfo() {
         return personnalInfo;
     }

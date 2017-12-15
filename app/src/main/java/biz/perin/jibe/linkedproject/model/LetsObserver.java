@@ -8,4 +8,6 @@ public interface LetsObserver {
     public void onNewPerson(Person pers);
     public void onNewPost(ForumMessage mess);
     public void onNewTransaction(Transaction trans);
+
+    public void onNewAccount(Account acc);
 }

@@ -134,7 +134,7 @@ public class LetsClient implements AnnounceFragment.ListAnnounceDataProvider {
                 triggerDownload(PERSONNAL_INFO);
             }
 
-            if (mModel.getAccount() == null) {
+            if ((mModel.getAccount() == null) || (mModel.getAccount().equals("null"))){
                 triggerDownload(ACCOUNT_INFO);
             }
 

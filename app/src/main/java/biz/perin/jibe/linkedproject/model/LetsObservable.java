@@ -19,6 +19,13 @@ public class LetsObservable {
         }
     }
 
+    void notifyNew (Account acc){
+        for (LetsObserver obs: listOfObservers){
+            obs.onNewAccount(acc);
+        }
+    }
+
+
     void notifyNew (Announce ann){
         for (LetsObserver obs: listOfObservers){
             obs.onNewAnnounce(ann);

@@ -82,6 +82,7 @@ public class LocalSystemExchange extends LetsObservable implements ILocalSystemE
     public void add(Account acc) {
         // TODO rename in setAccount
         account = acc;
+        notifyNew(account);
     }
 
     @Override

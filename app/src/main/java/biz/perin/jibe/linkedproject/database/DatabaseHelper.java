@@ -223,5 +223,10 @@ public class DatabaseHelper extends SQLiteOpenHelper implements LetsObserver{
 
         int returnCode = (int) mydatabase.insert("Transactions", null, values);
     }
+
+    @Override
+    public void onNewAccount(Account acc) {
+        //TODO
+    }
 }
 
